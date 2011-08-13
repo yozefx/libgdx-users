@@ -27,7 +27,7 @@ cd ..
 
 echo "copying..."
 
-desktop="../demos"
+desktop="../demos-desktop"
 android="../demos-android"
 
 # shared libs
@@ -36,6 +36,11 @@ cp -r libs/* ../gdx-shared-libs/libs
 # setup desktop
 cp -r libs/* $desktop/libs
 rm -rf $desktop/libs/docs
+# delete superfluous libs for desktop target
+rm -rf $desktop/libs/armeabi
+rm -rf $desktop/libs/armeabi-v7a
+rm -rf $desktop/libs/gdx-backend-android.jar
+rm -rf $desktop/libs/gdx-backend-android-sources.jar
 
 # setup android - fewer files needed
 cp -r libs/armeabi $android/libs
