@@ -85,8 +85,8 @@ public class DecalTransform extends InputAdapter implements ApplicationListener 
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-		Gdx.gl11.glLoadIdentity();
-		Gdx.gl11.glScalef(0.02f, 0.02f, 1);
+		Gdx.gl10.glLoadIdentity();
+		Gdx.gl10.glScalef(0.02f, 0.02f, 1);
 
 		int n = 0;
 
