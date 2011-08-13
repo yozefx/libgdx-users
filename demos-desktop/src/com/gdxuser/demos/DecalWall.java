@@ -142,7 +142,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	}
 
 	private void drawClouds(GL10 gl, DecalSprite player2) {
-		// TODO Auto-generated method stub
 		gl.glPushMatrix();
 		oCam.unproject(ppos);
 		Log.out("ppos: " + ppos);
@@ -153,7 +152,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	}
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		Log.out("touched:", x, y);
+		Log.out("touched:" + x + y);
 		return false;
 	}
 
