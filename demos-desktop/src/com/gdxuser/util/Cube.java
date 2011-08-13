@@ -13,7 +13,8 @@ import com.badlogic.gdx.math.Vector3;
 public class Cube extends MeshHelper {
 
 	public Cube(Vector3 sz) {
-		loadMesh("data/3d/cube.obj");
+		super("data/3d/cube.obj");
+		
 		//TODO - add scale for rendering
 		size = sz;
 		Log.out("cube bounds: " + mesh.calculateBoundingBox());
@@ -24,9 +25,8 @@ public class Cube extends MeshHelper {
 	}
 	
 	public Cube() {
-		loadMesh();
+		super("data/3d/cube.obj");
 	}
-
 
 
 }

@@ -25,6 +25,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private DecalSprite wall;
 	private DecalBatch batch;
 	private DecalSprite player;
+	private MeshHelper floorMesh;
 
 	@Override
 	public void create() {
@@ -44,7 +45,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		
 		floorMesh = new MeshHelper("data/3d/floorplan.obj");
 		
-		cube = new Cube().scale(0.5f).pos(0f, 0.5f, 0f);
+		cube = new Cube();
+		cube.scale(0.5f).pos(0f, 0.5f, 0f);
 		wall = new DecalSprite("data/decals/256/3d_side.png");
 		wall.sprite.setDimensions(6, 6);
 		wall.sprite.setPosition(5, 3, 0);
