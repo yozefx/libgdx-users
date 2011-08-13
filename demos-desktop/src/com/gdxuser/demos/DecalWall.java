@@ -81,7 +81,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		Vector3 ppos = player.sprite.getPosition();
 //		System.out.println("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
 //		oCam.position.set(5f, 2f, 4f);
-		oCam.position.set(ppos.x, ppos.y, ppos.z+10);
+//		oCam.position.set(ppos.x, ppos.y, ppos.z+10);
 //		oCam.lookAt(ppos.x, ppos.y, ppos.z);
 		oCam.update();
 		oCam.apply(gl);
@@ -102,23 +102,37 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 			if (Gdx.input.isKeyPressed(Keys.A))
 			{
-				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-				player.sprite.rotateY(40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(-40 * Gdx.graphics.getDeltaTime(), 0, 0);				
+//				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateY(40 * Gdx.graphics.getDeltaTime());
 			}
 			if (Gdx.input.isKeyPressed(Keys.D))
 			{
-				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-				player.sprite.rotateY(-40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(40 * Gdx.graphics.getDeltaTime(), 0, 0);				
+//				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateY(-40 * Gdx.graphics.getDeltaTime());
 			}
 			if (Gdx.input.isKeyPressed(Keys.W))
 			{
-				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
-				player.sprite.rotateX(-40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(0, 0, -40 * Gdx.graphics.getDeltaTime());				
+//				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
+//				player.sprite.rotateX(-40 * Gdx.graphics.getDeltaTime());
 			}
 			if (Gdx.input.isKeyPressed(Keys.S))
 			{
-				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
-				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(0, 0, 40 * Gdx.graphics.getDeltaTime());				
+//				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
+//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.E))
+			{
+				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.Q))
+			{
+				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
 			}
 			oCam.update();
 		}
