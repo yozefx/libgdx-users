@@ -17,6 +17,7 @@ package com.gdxuser.util;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.gdxuser.demos.DecalTest;
+import com.gdxuser.demos.DecalTransform;
 
 public class DemosDesktop {
 	public static void main(String[] argv) {
