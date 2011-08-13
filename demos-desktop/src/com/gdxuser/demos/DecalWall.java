@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
@@ -33,6 +34,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private DecalSprite player;
 	private MeshHelper floorMesh;
 	private Image cloud;
+	private Texture cloudTex;
+	private Sprite cloudSprite;
+	private Vector3 ppos;
 
 	@Override
 	public void create() {
@@ -65,13 +69,18 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		player = new DecalSprite("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(4, 4);
 		player.sprite.setPosition(4, 2, 2);
-		
+
+		// 2d sprites
+		spriteBatch2d = new SpriteBatch();
+		spriteBatch2d.enableBlending();
+
 		// 2d cloud sprite
-		cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
-		cloud.x = 10;
-		cloud.y = 10;
-
-
+		String imgPath = "data/icons/128/thunder.png";
+		cloudTex = new Texture(Gdx.files.internal(imgPath));
+		cloudSprite = new Sprite(cloudTex);
+//		cloudTex.x = 10;
+//		cloudTex.y = 10;
+//		cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
 
 		decalBatch3d = new DecalBatch();
 
@@ -92,7 +101,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam.push();
 
-		Vector3 ppos = player.sprite.getPosition();
+		ppos = player.sprite.getPosition();
 //		Log.out("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
 //		oCam.position.set(5f, 2f, 4f);
 
@@ -119,13 +128,15 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cube.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
-
-//		spriteBatch2d = new SpriteBatch();
-//		spriteBatch2d.enableBlending();
-//		spriteBatch2d.begin();
-//		cloud.draw(spriteBatch2d, 0.5f);
-//		spriteBatch2d.flush();
-
+		
+		gl.glPushMatrix();
+		oCam.unproject(ppos);
+		spriteBatch2d.begin();
+		// cloudSprite.setPosition(ppos.x, ppos.y);
+		cloudSprite.draw(spriteBatch2d, 0.5f);
+		spriteBatch2d.end();
+		
+		gl.glPopMatrix();
 		
 		// oCam.unproject(ppos);
 		// Log.out("ppos = " + ppos);
@@ -162,7 +173,11 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		super.keyDown(keyCode);
 		switch (keyCode) {
 		case Keys.C:
-
+			Log.out("cam:");
+			break;
+		case Keys.SPACE:
+			Log.out("ppos:" + ppos);
+			break;
 		}
 		Log.out("campos:" + oCam.position);
 		return false;
