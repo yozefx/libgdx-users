@@ -9,14 +9,15 @@ public class CamUtil {
 	private static Vector3 campos;
 	private static float aspect;
 
-	public static Camera orthoCam(float w, float h) {
-			float viewsize = 20;  // this should be related to the size of your scene	
+	// viewsize should be related to the size of your scene	
+
+	public static Camera orthoCam(float w, float h, float viewSize) {
 			aspect = h * 1f / w;
-			OrthographicCamera camera = new OrthographicCamera(viewsize, (viewsize * aspect));
+			OrthographicCamera camera = new OrthographicCamera(viewSize, (viewSize * aspect));
 			campos = new Vector3(15, 15, 8);
 			camera.position.set(campos);
 			// camera.direction.set(-1, -1, -1);
-			camera.lookAt(0, 0, 0);
+			camera.lookAt(w/2, 0, h/2);
 			camera.near = 0.1f;
 			camera.far = 10000;
 			return camera;
