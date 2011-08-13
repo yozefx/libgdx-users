@@ -6,18 +6,18 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.gdxuser.util.CamUtil;
 import com.gdxuser.util.Cube;
 import com.gdxuser.util.DecalSprite;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.FloorGrid;
+import com.gdxuser.util.GuOrthoCam;
 import com.gdxuser.util.Log;
 
 public class DecalWall extends DemoWrapper implements InputProcessor {
 	private static final int GRID_SIZE = 10;
 	float w;
 	float h;
-	private Camera oCam;
+	private GuOrthoCam oCam;
 	private Cube cube;
 	FloorGrid floor;
 	private DecalSprite wall;
@@ -32,7 +32,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
 
-		oCam = CamUtil.orthoCam(w, h, GRID_SIZE * 2);
+		oCam = new GuOrthoCam(w, h, GRID_SIZE * 2);
 		oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
 		oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
 		// oCam.lookAt(0, 0, 0);
@@ -66,13 +66,21 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.apply(gl);
 		
 		batch.add(wall.sprite);
+		batch.flush();
+		// oCam.push();
 		
-		Vector3 ppos = player.sprite.getPosition();				
-		oCam.lookAt(ppos.x, ppos.y, ppos.z );
-		// player.faceCamera(oCam);
+		Vector3 ppos = player.sprite.getPosition();
+//		oCam.position.set(ppos.x, ppos.y, ppos.z + 10);
+//		oCam.lookAt(ppos.x, ppos.y, ppos.z );
+		oCam.update();
+		oCam.apply(gl);
 		batch.add(player.sprite);
 		batch.flush();
-
+		
+		// oCam.pop();
+		oCam.update();
+		oCam.apply(gl);
+		
 		gl.glPushMatrix();
 		gl.glColor4f(1, 0, 0, 1f);
 		cube.render(gl, GL10.GL_LINE_STRIP);
