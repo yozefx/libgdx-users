@@ -40,7 +40,7 @@ public class DemoWrapper implements ApplicationListener
 	public void render( ) { };
 	public void resize(int width, int height) { };
 	public void pause( ) { };
-	public void dispose( ) { };
+	
 	
 
 	public boolean keyDown(int keyCode) {
@@ -89,5 +89,11 @@ public class DemoWrapper implements ApplicationListener
 	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
 		return false;
 	}
+
+	@Override 
+	public void dispose () {
+		Gdx.app.log("gdxdemo", "application destroyed");
+	}
+
 
 }

@@ -2,10 +2,14 @@ package com.gdxuser.demos;
 
 import java.util.LinkedList;
 
+import com.gdxuser.util.CamUtil;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -14,114 +18,47 @@ import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.SimpleOrthoGroupStrategy;
 import com.badlogic.gdx.math.WindowedMean;
+import com.gdxuser.util.CamUtil;
+import com.gdxuser.util.DemoWrapper;
+import com.gdxuser.util.MeshUtil;
 
-public class DecalWall extends Game {
-	public static final int TARGET_FPS = 40;
-	public static final int INITIAL_RENDERED = 100;
-	private boolean willItBlend_that_is_the_question = true;
-	private GroupStrategy strategy = new SimpleOrthoGroupStrategy();
-	//private GroupStrategy strategy = new DefaultGroupStrategy();
-	Texture egg;
-	Texture wheel;
-	LinkedList<Decal> toRender = new LinkedList<Decal>();
-	DecalBatch batch;
-	float timePassed = 0;
-	int frames = 0;
-	Camera cam;
-	WindowedMean fps = new WindowedMean(5);
-	int idx = 0;
+public class DecalWall extends DemoWrapper implements InputProcessor {
 	float w;
 	float h;
+	private Camera oCam;
+	private Mesh mesh1, mesh2;
 
 	@Override
 	public void create() {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
-
-		egg = new Texture(Gdx.files.internal("data/badges/128/badge0.png"));
-		egg.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		egg.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
-		wheel = new Texture(Gdx.files.internal("data/decals/256/3d_side.png"));
-		wheel.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		wheel.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
-
+		
 		w = Gdx.graphics.getWidth() / 0.8f;
 		h = Gdx.graphics.getHeight() / 0.8f;
-		for(int i = 0; i < INITIAL_RENDERED; i++) {
-			toRender.add(makeDecal());
-		}
-		batch = new DecalBatch(strategy);
 
-		Gdx.gl.glClearColor(1,1,0,1);
+		oCam = CamUtil.orthoCam(w, h);
+		
+		mesh1 = new MeshUtil().floorGrid(5,5);
+		mesh2 = new MeshUtil().cube();
+		
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	public void render() {
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		GL10 gl = Gdx.app.getGraphics().getGL10();
+		gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		gl.glLoadIdentity();
 
-
-		float elapsed = Gdx.graphics.getDeltaTime();
-		float scale = timePassed > 0.5 ? 1 - timePassed / 2 : 0.5f + timePassed / 2;
-
-		for(Decal decal : toRender) {
-			decal.rotateZ(elapsed * 45);
-			decal.setScale(scale);
-			batch.add(decal);
-		}
-		batch.flush();
-
-		timePassed += elapsed;
-		frames++;
-		if(timePassed > 1.0f) {
-			System.out.println("DecalPerformanceTest2 fps: " + frames + " at spritecount: " + toRender.size());
-			fps.addValue(frames);
-			if(fps.hasEnoughData()) {
-				float factor = fps.getMean() / (float) TARGET_FPS;
-				int target = (int) (toRender.size() * factor);
-				if(fps.getMean() > TARGET_FPS) {
-					int start = toRender.size();
-					for(int i = start; toRender.size() < target; i++) {
-						toRender.add(makeDecal());
-					}
-					fps.clear();
-				}
-				else {
-					while(toRender.size() > target) {
-						toRender.removeLast();
-					}
-					fps.clear();
-				}
-			}
-			timePassed = 0;
-			frames = 0;
-		}
+		oCam.update();
+		oCam.apply(gl);
+		
+		gl.glColor4f(1, 0, 0, 1f);
+		mesh1.render(GL10.GL_LINE_STRIP);
+		mesh2.render(GL10.GL_LINE_STRIP);
+		
 	}
 
-	@Override
-	public void resize(int width, int height) {
-		w = Gdx.graphics.getWidth() / 0.8f;
-		h = Gdx.graphics.getHeight() / 0.8f;
-		cam = new OrthographicCamera(width, height);
-		cam.near = 0.1f;
-		cam.far = 10f;
-		cam.position.set(0, 0, 0.1f);
-		cam.direction.set(0, 0, -1f);
-		cam.update();
-		cam.apply(Gdx.gl10);
-	}
-
-	private Decal makeDecal() {
-		Decal sprite = null;
-		switch(idx % 2) {
-			case 0:
-				sprite = Decal.newDecal(new TextureRegion(egg), willItBlend_that_is_the_question);
-				break;
-			case 1:
-				sprite = Decal.newDecal(new TextureRegion(wheel));
-				break;
-		}
-		sprite.setPosition(-w / 2 + (float) Math.random() * w, h / 2 - (float) Math.random() * h, (float) -Math.random() * 10);
-		idx++;
-		return sprite;
-	}
 }
