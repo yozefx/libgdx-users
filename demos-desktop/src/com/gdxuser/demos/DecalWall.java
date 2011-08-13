@@ -137,7 +137,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 	}
 
-	private void drawClouds(GL10 gl, DecalSprite player2) {
+//	private void drawClouds(GL10 gl, DecalSprite player2) {
+		private void drawClouds(GL10 gl) {		
 		gl.glPushMatrix();
 		cloud.project(oCam);
 		cloud.update();
