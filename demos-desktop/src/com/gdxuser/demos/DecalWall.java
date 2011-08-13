@@ -76,8 +76,10 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.push();
 
 		Vector3 ppos = player.sprite.getPosition();
-		oCam.position.set(ppos.x, ppos.y, ppos.z + 10);
-//		oCam.lookAt(ppos.x, ppos.y, ppos.z);
+//		System.out.println("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
+//		oCam.position.set(5f, 2f, 4f);
+		oCam.position.set(ppos.x, ppos.y, ppos.z+10);
+		oCam.lookAt(ppos.x, ppos.y, ppos.z);
 		oCam.update();
 		oCam.apply(gl);
 		batch.add(player.sprite);
@@ -88,13 +90,10 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.apply(gl);
 
 		gl.glPushMatrix();
-		gl.glColor4f(1, 0, 0, 1f);
-		cube.render(gl, GL10.GL_LINE_STRIP);
-		gl.glPopMatrix();
-
-		gl.glPushMatrix();
 		gl.glColor4f(0, 1, 0, 1f);
 		floor.render(gl, GL10.GL_LINE_STRIP);
+		gl.glColor4f(1, 0, 0, 1f);
+		cube.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
 	}
