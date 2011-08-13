@@ -13,6 +13,7 @@ import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.FloorGrid;
 import com.gdxuser.util.GuOrthoCam;
 import com.gdxuser.util.Log;
+import com.gdxuser.util.MeshHelper;
 
 public class DecalWall extends DemoWrapper implements InputProcessor {
 	private static final int GRID_SIZE = 10;
@@ -40,6 +41,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		// put some basic furniture in
 		floor = new FloorGrid(GRID_SIZE, GRID_SIZE);
+		
+		floorMesh = new MeshHelper("data/3d/floorplan.obj");
+		
 		cube = new Cube().scale(0.5f).pos(0f, 0.5f, 0f);
 		wall = new DecalSprite("data/decals/256/3d_side.png");
 		wall.sprite.setDimensions(6, 6);
