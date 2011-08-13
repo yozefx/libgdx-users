@@ -1,6 +1,7 @@
 package com.gdxuser.demos;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
@@ -37,8 +38,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam = new GuOrthoCam(w, h, GRID_SIZE * 2);
 		oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
-		// oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
-		oCam.lookAt(0, 0, 0);
+		oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
+//		oCam.lookAt(0, 0, 0);
 
 		// put some basic furniture in
 		floor = new FloorGrid(GRID_SIZE, GRID_SIZE);
@@ -56,7 +57,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		player = new DecalSprite("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(4, 4);
-		player.sprite.setPosition(5, 2, 2);
+		player.sprite.setPosition(4, 2, 2);
 
 		batch = new DecalBatch();
 
@@ -81,7 +82,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 //		System.out.println("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
 //		oCam.position.set(5f, 2f, 4f);
 		oCam.position.set(ppos.x, ppos.y, ppos.z+10);
-		oCam.lookAt(ppos.x, ppos.y, ppos.z);
+//		oCam.lookAt(ppos.x, ppos.y, ppos.z);
 		oCam.update();
 		oCam.apply(gl);
 		batch.add(player.sprite);
@@ -98,6 +99,30 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cube.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
+		if (Gdx.app.getType() == ApplicationType.Desktop) {
+			if (Gdx.input.isKeyPressed(Keys.A))
+			{
+				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+				player.sprite.rotateY(40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.D))
+			{
+				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+				player.sprite.rotateY(-40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.W))
+			{
+				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
+				player.sprite.rotateX(-40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.S))
+			{
+				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
+				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+			}
+			oCam.update();
+		}
+		
 	}
 
 	@Override
