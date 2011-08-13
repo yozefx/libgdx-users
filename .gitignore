@@ -1,9 +1,7 @@
 # and2
 nightly/libs
 bitz/data/*
-libgdx-users
 */libs/*
-*/.settings/
 
 ignore/*
 

@@ -6,11 +6,11 @@
 
 set -x
 
-YESTERDAY=`TZ=aaa24 date +%Y%m%d`
+# YESTERDAY=`TZ=aaa24 date +%Y%m%d`
 
-# STAMP=$(date -u +%Z%Y%m%d)
+STAMP=$(date -u +%Y%m%d)
 # STAMP="20110812"    # to hardwire cos of dateline
-STAMP=$YESTERDAY
+# STAMP=$YESTERDAY
 
 echo "getting nightly: $STAMP"
 

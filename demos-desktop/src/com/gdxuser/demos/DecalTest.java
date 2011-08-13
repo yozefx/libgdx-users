@@ -35,7 +35,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 
 public class DecalTest extends InputAdapter implements ApplicationListener {
-	private static final int DECAL_COUNT = 10;
+	private static final int DECAL_COUNT = 5;
 	Texture image;
 	Decal sprites[] = new Decal[DECAL_COUNT];
 	DecalBatch batch;
@@ -55,8 +55,9 @@ public class DecalTest extends InputAdapter implements ApplicationListener {
 		float w = 100;// Gdx.graphics.getWidth()/2;
 		float h = 80;// Gdx.graphics.getHeight()/2;
 
-		for (int i=0; i<DECAL_COUNT; i++) {
-			sprites[i] = Decal.newDecal(20, 20, new TextureRegion(image), false);
+		for (int i = 0; i < DECAL_COUNT; i++) {
+			sprites[i] = Decal
+					.newDecal(20, 20, new TextureRegion(image), false);
 			sprites[i].setX(20 * i);
 		}
 
@@ -87,12 +88,7 @@ public class DecalTest extends InputAdapter implements ApplicationListener {
 		Gdx.gl11.glLoadIdentity();
 		Gdx.gl11.glScalef(0.02f, 0.02f, 1);
 
-		int n=0;
-		
-		Action a = keyActions.get(key);
-		if (a != null) {
-			a.perform(sprites[n]);
-		}
+		int n = 0;
 
 		float elapsed = Gdx.graphics.getDeltaTime();
 		float translate = timePassed > 0.5 ? (float) Math.random() - timePassed
@@ -102,8 +98,13 @@ public class DecalTest extends InputAdapter implements ApplicationListener {
 		cam.update();
 		cam.apply(Gdx.gl10);
 
-		for (int i=0; i<DECAL_COUNT; i++) {
+		Action a = keyActions.get(key);
+
+		for (int i = 0; i < DECAL_COUNT; i++) {
 			batch.add(sprites[n]);
+			if (a != null) {
+				a.perform(sprites[n]);
+			}
 		}
 
 		batch.flush();
