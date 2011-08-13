@@ -26,16 +26,68 @@
  * governing permissions and limitations under the License.
  */
 
-package com.badlogic.gdx;
+package com.gdxuser.util;
 
-import android.os.Bundle;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.helloworld.Demos;
 
-public class DemosAndroid extends AndroidApplication {
-	@Override public void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		initialize(new Demos(), false);
+public class DemoWrapper implements ApplicationListener
+{
+	public void create( ) { };
+	public void resume( ) { };
+	public void render( ) { };
+	public void resize(int width, int height) { };
+	public void pause( ) { };
+	public void dispose( ) { };
+	
+
+	public boolean keyDown(int keyCode) {
+		switch (keyCode) {
+		case Keys.Q:
+			Gdx.app.exit();
+		}
+		return false;
 	}
+
+	public boolean keyTyped(char arg0) {
+		return false;
+	}
+
+	
+	public boolean keyUp(int arg0) {
+		return false;
+	}
+
+	
+	public boolean scrolled(int arg0) {
+		return false;
+	}
+
+	
+	public boolean touchDown(int arg0, int arg1, int arg2, int arg3) {
+		return false;
+	}
+
+	
+	public boolean touchDragged(int arg0, int arg1, int arg2) {
+		return false;
+	}
+
+	
+	public boolean touchMoved(int arg0, int arg1) {
+		return false;
+	}
+
+
+	//TODO - maybe not correct
+	public boolean needsGL20() {
+		return false;
+	}
+
+	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
+		return false;
+	}
+
 }

@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.badlogic.gdx.helloworld;
+
+// very simple test to show a color screen + change color when clicked
+
+package com.gdxuser.demos;
+
+import com.gdxuser.util.DemoWrapper;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 
-public class SimpleTest extends GdxTest implements InputProcessor {
+
+public class SimpleTest extends DemoWrapper implements InputProcessor {
 	float r = 1, g = 0, b = 0;
 
 	@Override public void create () {
@@ -38,26 +44,6 @@ public class SimpleTest extends GdxTest implements InputProcessor {
 		Gdx.app.log("Simple Test", "Thread=" + Thread.currentThread().getId() + ", application destroyed");
 	}
 
-	@Override public boolean keyDown (int keycode) {
-		return false;
-	}
-
-	@Override public boolean keyTyped (char character) {
-		return false;
-	}
-
-	@Override public boolean keyUp (int keycode) {
-		return false;
-	}
-
-	@Override public boolean touchDown (int x, int y, int pointer, int newParam) {
-		return false;
-	}
-
-	@Override public boolean touchDragged (int x, int y, int pointer) {
-		return false;
-	}
-
 	@Override public boolean touchUp (int x, int y, int pointer, int button) {
 		r = (float)Math.random();
 		g = (float)Math.random();
@@ -65,21 +51,4 @@ public class SimpleTest extends GdxTest implements InputProcessor {
 		return false;
 	}
 
-	@Override public void pause () {
-	}
-
-	@Override public void resume () {
-	}
-
-	@Override public boolean needsGL20 () {
-		return false;
-	}
-
-	@Override public boolean touchMoved (int x, int y) {
-		return false;
-	}
-
-	@Override public boolean scrolled (int amount) {
-		return false;
-	}
 }

@@ -26,17 +26,16 @@
  * governing permissions and limitations under the License.
  */
 
-package com.badlogic.gdx.helloworld;
+package com.gdxuser.demos;
 
-import com.badlogic.gdx.ApplicationListener;
+import android.os.Bundle;
 
-public abstract class GdxTest implements ApplicationListener
-{
-	public abstract boolean needsGL20( );		
-	public void create( ) { };
-	public void resume( ) { };
-	public void render( ) { };
-	public void resize(int width, int height) { };
-	public void pause( ) { };
-	public void dispose( ) { };
+import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.gdxuser.demos.SpriteTest;
+
+public class DemosAndroid extends AndroidApplication {
+	@Override public void onCreate (Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		initialize(new SpriteTest(), false);
+	}
 }

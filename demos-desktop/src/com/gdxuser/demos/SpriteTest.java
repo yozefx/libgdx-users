@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.badlogic.gdx.helloworld;
+package com.gdxuser.demos;
+
+import com.gdxuser.util.DemoWrapper;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Files.FileType;
@@ -27,7 +29,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class Demos implements ApplicationListener {
+
+public class SpriteTest extends DemoWrapper implements ApplicationListener {
 	SpriteBatch spriteBatch;
 	Texture texture;
 	BitmapFont font;

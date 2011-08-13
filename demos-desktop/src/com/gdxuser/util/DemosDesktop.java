@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.badlogic.gdx.helloworld;
+package com.gdxuser.util;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.gdxuser.demos.DecalTest;
 
 public class DemosDesktop {
 	public static void main(String[] argv) {
-		// new LwjglApplication(new Demos(), "Game", 480, 320, false);
-		new LwjglApplication(new SimpleTest(), "Game", 480, 320, false);
+		//TODO add menu system to allow user to pick which demo to launch
+		// low tech switching method to choose which demo to view! comments!
+		// new LwjglApplication(new SimpleTest(), "Game", 480, 320, false);
+		new LwjglApplication(new DecalTest(), "Game", 480, 320, false);
 	}
 }
