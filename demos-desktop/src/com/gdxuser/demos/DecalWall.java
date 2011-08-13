@@ -26,7 +26,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	float w;
 	float h;
 	private Camera oCam;
-	private Mesh mesh1, mesh2;
+	private Mesh cube, floor;
 
 	@Override
 	public void create() {
@@ -38,8 +38,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam = CamUtil.orthoCam(w, h);
 		
-		mesh1 = new MeshUtil().floorGrid(5,5);
-		mesh2 = new MeshUtil().cube();
+		floor = new MeshUtil().floorGrid(5,5);
+		cube = new MeshUtil().cube();
 		
 		Gdx.input.setInputProcessor(this);
 	}
@@ -47,17 +47,20 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	@Override
 	public void render() {
 		GL10 gl = Gdx.app.getGraphics().getGL10();
-		gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		// gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glLoadIdentity();
+
+		gl.glTranslatef(0f, 0.5f, 0f);
+		gl.glScalef(0.5f, 0.5f, 0.5f);
 
 		oCam.update();
 		oCam.apply(gl);
 		
 		gl.glColor4f(1, 0, 0, 1f);
-		mesh1.render(GL10.GL_LINE_STRIP);
-		mesh2.render(GL10.GL_LINE_STRIP);
+		cube.render(GL10.GL_LINE_STRIP);
+		floor.render(GL10.GL_LINE_STRIP);
 		
 	}
 

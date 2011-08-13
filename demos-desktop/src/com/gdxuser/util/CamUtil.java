@@ -12,10 +12,10 @@ public class CamUtil {
 	public static Camera orthoCam(float w, float h) {
 			aspect = h * 1f / w;
 			OrthographicCamera camera = new OrthographicCamera(10, (10 * aspect));
-			campos = new Vector3(8, 2, 8);
+			campos = new Vector3(15, 15, 8);
 			camera.position.set(campos);
-			camera.direction.set(-1, -1, -1);
-			// cam.lookAt(5, 0, 5);
+			// camera.direction.set(-1, -1, -1);
+			camera.lookAt(0, 0, 0);
 			camera.near = 0.1f;
 			camera.far = 10000;
 			return camera;
