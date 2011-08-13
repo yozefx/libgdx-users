@@ -65,8 +65,7 @@ public class DemoWrapper implements ApplicationListener
 		return false;
 	}
 
-	
-	public boolean touchDown(int arg0, int arg1, int arg2, int arg3) {
+	public boolean touchDown(int x, int y, int pointer, int button) {
 		return false;
 	}
 

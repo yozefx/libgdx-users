@@ -51,4 +51,11 @@ public class SimpleTest extends DemoWrapper implements InputProcessor {
 		return false;
 	}
 
+	@Override
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+
 }

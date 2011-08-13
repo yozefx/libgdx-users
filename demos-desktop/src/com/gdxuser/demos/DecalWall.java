@@ -130,59 +130,34 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cube.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
-		
-		gl.glPushMatrix();
-		oCam.unproject(ppos);
-		spriteBatch2d.begin();
-		// cloudSprite.setPosition(ppos.x, ppos.y);
-		cloudSprite.draw(spriteBatch2d, 0.5f);
-		spriteBatch2d.end();
+		drawClouds(gl, player);
 		
 		gl.glPopMatrix();
 		
 		// oCam.unproject(ppos);
 		// Log.out("ppos = " + ppos);
-
-		if (Gdx.app.getType() == ApplicationType.Desktop) {
-			if (Gdx.input.isKeyPressed(Keys.A))
-			{
-				oCam.translate(-40 * Gdx.graphics.getDeltaTime(), 0, 0);				
-//				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-//				player.sprite.rotateY(40 * Gdx.graphics.getDeltaTime());
-			}
-			if (Gdx.input.isKeyPressed(Keys.D))
-			{
-				oCam.translate(40 * Gdx.graphics.getDeltaTime(), 0, 0);				
-//				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-//				player.sprite.rotateY(-40 * Gdx.graphics.getDeltaTime());
-			}
-			if (Gdx.input.isKeyPressed(Keys.W))
-			{
-				oCam.translate(0, 0, -40 * Gdx.graphics.getDeltaTime());				
-//				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
-//				player.sprite.rotateX(-40 * Gdx.graphics.getDeltaTime());
-			}
-			if (Gdx.input.isKeyPressed(Keys.S))
-			{
-				oCam.translate(0, 0, 40 * Gdx.graphics.getDeltaTime());				
-//				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
-//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
-			}
-			if (Gdx.input.isKeyPressed(Keys.E))
-			{
-				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
-			}
-			if (Gdx.input.isKeyPressed(Keys.Q))
-			{
-				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
-			}
-			oCam.update();
-		}
+		oCam.handleKeys();
 
 		
 	}
+
+	private void drawClouds(GL10 gl, DecalSprite player2) {
+		// TODO Auto-generated method stub
+		gl.glPushMatrix();
+		oCam.unproject(ppos);
+		Log.out("ppos: " + ppos);
+		spriteBatch2d.begin();
+		cloudSprite.setPosition(ppos.x, ppos.y);
+		cloudSprite.draw(spriteBatch2d, 0.5f);
+		spriteBatch2d.end();
+	}
+	
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		Log.out("touched:", x, y);
+		return false;
+	}
+
+	
 
 	@Override
 	public boolean keyDown(int keyCode) {
