@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.actors.Image;
+import com.gdxuser.util.Billboard;
 import com.gdxuser.util.Cube;
 import com.gdxuser.util.DecalSprite;
 import com.gdxuser.util.DemoWrapper;
@@ -33,10 +34,10 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private SpriteBatch spriteBatch2d;
 	private DecalSprite player;
 	private MeshHelper floorMesh;
-	private Image cloud;
+	private Billboard cloud;
 	private Texture cloudTex;
-	private Sprite cloudSprite;
 	private Vector3 ppos;
+	private int ctr=0;
 
 	@Override
 	public void create() {
@@ -49,13 +50,13 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam = new GuOrthoCam(w, h, GRID_SIZE * 2);
 		oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
 		oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
-//		oCam.lookAt(0, 0, 0);
+		// oCam.lookAt(0, 0, 0);
 
 		// put some basic furniture in
 		floor = new FloorGrid(GRID_SIZE, GRID_SIZE);
-		
-//		floorMesh = new MeshHelper("data/3d/floorplan.obj");
-		
+
+		// floorMesh = new MeshHelper("data/3d/floorplan.obj");
+
 		cube = new Cube();
 		cube.scale(0.5f).pos(0f, 0.5f, 0f);
 		wall = new DecalSprite("data/decals/256/3d_side.png");
@@ -69,11 +70,11 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		player = new DecalSprite("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(4, 4);
 		player.sprite.setPosition(4, 2, 2);
-		
+
 		// 2d cloud sprite
-//		cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
-//		cloud.x = 10;
-//		cloud.y = 10;
+		// cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
+		// cloud.x = 10;
+		// cloud.y = 10;
 
 		// 2d sprites
 		spriteBatch2d = new SpriteBatch();
@@ -81,11 +82,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		// 2d cloud sprite
 		String imgPath = "data/icons/128/thunder.png";
-		cloudTex = new Texture(Gdx.files.internal(imgPath));
-		cloudSprite = new Sprite(cloudTex);
-//		cloudTex.x = 10;
-//		cloudTex.y = 10;
-//		cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
+		cloud = Billboard.make(imgPath);
+		cloud.wpos(2f,3f,2f);
 
 		decalBatch3d = new DecalBatch();
 
@@ -107,8 +105,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.push();
 
 		ppos = player.sprite.getPosition();
-//		Log.out("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
-//		oCam.position.set(5f, 2f, 4f);
+		// Log.out("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
+		// oCam.position.set(5f, 2f, 4f);
 
 		// oCam.position.set(ppos.x, ppos.y, ppos.z+10);
 		// oCam.lookAt(ppos.x, ppos.y, ppos.z);
@@ -130,26 +128,34 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cube.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
-		drawClouds(gl, player);
-		
+		drawClouds(gl);
+
 		gl.glPopMatrix();
-		
-		// oCam.unproject(ppos);
+
 		// Log.out("ppos = " + ppos);
 		oCam.handleKeys();
 
-		
 	}
 
-	private void drawClouds(GL10 gl, DecalSprite player2) {
-		// TODO Auto-generated method stub
+	private void drawClouds(GL10 gl) {
 		gl.glPushMatrix();
-		oCam.unproject(ppos);
-		Log.out("ppos: " + ppos);
+		cloud.project(oCam);
+		cloud.update();
+		
+		if (ctr++ % 100 == 0) {
+			// Log.out("ppos: " + ppos + "  player:");
+			// Log.out("cld: " + cld);
+			// Log.out("player: " + player.sprite.getPosition() );
+		}
 		spriteBatch2d.begin();
-		cloudSprite.setPosition(ppos.x, ppos.y);
-		cloudSprite.draw(spriteBatch2d, 0.5f);
+		cloud.setPosition(cloud.spos.x, cloud.spos.y);
+		cloud.draw(spriteBatch2d, 0.5f);
 		spriteBatch2d.end();
+		gl.glPopMatrix();
+	}
+
+	private void overlay(GL10 gl) {
+		
 	}
 	
 	public boolean touchDown(int x, int y, int pointer, int button) {
@@ -157,11 +163,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		return false;
 	}
 
-	
-
 	@Override
 	public boolean keyDown(int keyCode) {
-		super.keyDown(keyCode);
 		switch (keyCode) {
 		case Keys.C:
 			Log.out("cam:");
@@ -171,7 +174,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 			break;
 		}
 		Log.out("campos:" + oCam.position);
-		return false;
+		return (super.keyDown(keyCode));
 	}
 
 }

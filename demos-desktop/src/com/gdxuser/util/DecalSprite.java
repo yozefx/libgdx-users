@@ -28,4 +28,7 @@ public class DecalSprite{
 		// sprite.direction.set(x, y, z).sub(position).nor();
 	}
 
+	public void update(float delta) {
+		// sprite.setRotation(dir, up)
+	}
 }
