@@ -1,6 +1,5 @@
 # and2
-nightly.zip
-nightly
+nightly/libs
 bitz/data/*
 libgdx-users
 */libs/*
