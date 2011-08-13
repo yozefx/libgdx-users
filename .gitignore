@@ -1,7 +1,6 @@
 # and2
 nightly/libs
 bitz/data/*
-*/libs/*
 
 ignore/*
 
