@@ -18,7 +18,8 @@ package com.badlogic.gdx.helloworld;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 
 public class DemosDesktop {
-	public static void main (String[] argv) {
-        new LwjglApplication(new Demos(), "Game", 480, 320, false);
+	public static void main(String[] argv) {
+		// new LwjglApplication(new Demos(), "Game", 480, 320, false);
+		new LwjglApplication(new SimpleTest(), "Game", 480, 320, false);
 	}
 }
