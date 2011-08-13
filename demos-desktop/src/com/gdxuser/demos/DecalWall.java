@@ -181,7 +181,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 			break;
 		
 		case Keys.C:
-			Log.out("campos:" + oCam.position);
+			Log.out("cam_pos:  " + oCam.position);
+			Log.out("cam_up:   " + oCam.up);
+			Log.out("cam_dir:  " + oCam.direction);
 			break;
 
 		case Keys.SPACE:
