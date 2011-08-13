@@ -45,7 +45,7 @@ public class DemoWrapper implements ApplicationListener
 
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
-		case Keys.Q:
+		case Keys.ESCAPE:
 			Gdx.app.exit();
 		}
 		return false;

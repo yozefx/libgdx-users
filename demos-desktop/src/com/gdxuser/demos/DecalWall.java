@@ -17,7 +17,7 @@ import com.gdxuser.util.DecalSprite;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.FloorGrid;
 import com.gdxuser.util.GuOrthoCam;
-import com.gdxuser.util.ImageSprite;
+//import com.gdxuser.util.ImageSprite;
 import com.gdxuser.util.Log;
 import com.gdxuser.util.MeshHelper;
 
@@ -54,7 +54,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		// put some basic furniture in
 		floor = new FloorGrid(GRID_SIZE, GRID_SIZE);
 		
-		floorMesh = new MeshHelper("data/3d/floorplan.obj");
+//		floorMesh = new MeshHelper("data/3d/floorplan.obj");
 		
 		cube = new Cube();
 		cube.scale(0.5f).pos(0f, 0.5f, 0f);
@@ -69,6 +69,11 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		player = new DecalSprite("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(4, 4);
 		player.sprite.setPosition(4, 2, 2);
+		
+		// 2d cloud sprite
+//		cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
+//		cloud.x = 10;
+//		cloud.y = 10;
 
 		// 2d sprites
 		spriteBatch2d = new SpriteBatch();
@@ -109,9 +114,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		// oCam.lookAt(ppos.x, ppos.y, ppos.z);
 		// player.sprite.rotateY(-45f);
 
-//		oCam.position.set(ppos.x, ppos.y, ppos.z+10);
-//		oCam.lookAt(ppos.x, ppos.y, ppos.z);
-
 		oCam.update();
 		oCam.apply(gl);
 		decalBatch3d.add(player.sprite);
@@ -144,23 +146,37 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 			if (Gdx.input.isKeyPressed(Keys.A))
 			{
-				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-				player.sprite.rotateY(40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(-40 * Gdx.graphics.getDeltaTime(), 0, 0);				
+//				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateY(40 * Gdx.graphics.getDeltaTime());
 			}
 			if (Gdx.input.isKeyPressed(Keys.D))
 			{
-				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
-				player.sprite.rotateY(-40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(40 * Gdx.graphics.getDeltaTime(), 0, 0);				
+//				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateY(-40 * Gdx.graphics.getDeltaTime());
 			}
 			if (Gdx.input.isKeyPressed(Keys.W))
 			{
-				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
-				player.sprite.rotateX(-40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(0, 0, -40 * Gdx.graphics.getDeltaTime());				
+//				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
+//				player.sprite.rotateX(-40 * Gdx.graphics.getDeltaTime());
 			}
 			if (Gdx.input.isKeyPressed(Keys.S))
 			{
-				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
-				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+				oCam.translate(0, 0, 40 * Gdx.graphics.getDeltaTime());				
+//				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 1, 0, 0);
+//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.E))
+			{
+				oCam.rotate(-40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
+			}
+			if (Gdx.input.isKeyPressed(Keys.Q))
+			{
+				oCam.rotate(40 * Gdx.graphics.getDeltaTime(), 0, 1, 0);
+//				player.sprite.rotateX(40 * Gdx.graphics.getDeltaTime());
 			}
 			oCam.update();
 		}
