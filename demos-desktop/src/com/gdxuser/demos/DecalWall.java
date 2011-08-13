@@ -37,7 +37,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private Billboard cloud;
 	private Texture cloudTex;
 	private Vector3 ppos;
-	private int ctr=0;
+	private int ctr = 0;
 
 	@Override
 	public void create() {
@@ -83,7 +83,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		// 2d cloud sprite
 		String imgPath = "data/icons/128/thunder.png";
 		cloud = Billboard.make(imgPath);
-		cloud.wpos(2f,3f,2f);
+		cloud.wpos(2f, 3f, 2f);
 
 		decalBatch3d = new DecalBatch();
 
@@ -137,12 +137,11 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 	}
 
-//	private void drawClouds(GL10 gl, DecalSprite player2) {
-		private void drawClouds(GL10 gl) {		
+	private void drawClouds(GL10 gl) {
 		gl.glPushMatrix();
 		cloud.project(oCam);
 		cloud.update();
-		
+
 		if (ctr++ % 100 == 0) {
 			// Log.out("ppos: " + ppos + "  player:");
 			// Log.out("cld: " + cld);
@@ -156,9 +155,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	}
 
 	private void overlay(GL10 gl) {
-		
+
 	}
-	
+
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		Log.out("touched:" + x + y);
 		return false;
@@ -167,14 +166,28 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	@Override
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
-		case Keys.C:
-			Log.out("cam:");
+
+		case Keys.I:
+			Log.out("Key Info (I):");
+			Log.out("ESC = quit demo");
+			Log.out("----------------------");
+			Log.out("A, D = move cam left / right");
+			Log.out("W, S = move cam forward / backward");
+			Log.out("Q, E = rotate cam counter-clockwise / clockwise");
+			Log.out("U, J = rotate cam up / down");
+			Log.out("N, M = orbit cam around player counter-clockwise / clockwise");
+			Log.out("C, SPACE = print cam / player position");
+			Log.out("----------------------");
 			break;
+		
+		case Keys.C:
+			Log.out("campos:" + oCam.position);
+			break;
+
 		case Keys.SPACE:
 			Log.out("ppos:" + ppos);
 			break;
 		}
-		Log.out("campos:" + oCam.position);
 		return (super.keyDown(keyCode));
 	}
 
