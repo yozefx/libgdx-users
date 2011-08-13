@@ -1,32 +1,22 @@
 package com.gdxuser.demos;
 
-import java.util.LinkedList;
-
-import com.gdxuser.util.CamUtil;
-
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
-import com.badlogic.gdx.graphics.g3d.decals.SimpleOrthoGroupStrategy;
-import com.badlogic.gdx.math.WindowedMean;
 import com.gdxuser.util.CamUtil;
+import com.gdxuser.util.Cube;
+import com.gdxuser.util.DecalSprite;
 import com.gdxuser.util.DemoWrapper;
-import com.gdxuser.util.MeshUtil;
+import com.gdxuser.util.FloorGrid;
 
 public class DecalWall extends DemoWrapper implements InputProcessor {
 	float w;
 	float h;
 	private Camera oCam;
-	private Mesh cube, floor;
+	private Cube cube;
+	FloorGrid floor;
+	private DecalSprite decal;
 
 	@Override
 	public void create() {
@@ -38,8 +28,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam = CamUtil.orthoCam(w, h);
 		
-		floor = new MeshUtil().floorGrid(5,5);
-		cube = new MeshUtil().cube();
+		floor = new FloorGrid(10,10);
+		cube = new Cube().scale(0.5f).pos(0f, 0.5f, 0f);
+		decal = new DecalSprite("data/decals/256/3d_side.png");
 		
 		Gdx.input.setInputProcessor(this);
 	}
@@ -52,15 +43,22 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		
 		gl.glLoadIdentity();
 
+		gl.glPushMatrix();
 		gl.glTranslatef(0f, 0.5f, 0f);
 		gl.glScalef(0.5f, 0.5f, 0.5f);
+		gl.glPopMatrix();
 
 		oCam.update();
 		oCam.apply(gl);
 		
+		gl.glPushMatrix();
 		gl.glColor4f(1, 0, 0, 1f);
-		cube.render(GL10.GL_LINE_STRIP);
-		floor.render(GL10.GL_LINE_STRIP);
+		cube.render(gl, GL10.GL_LINE_STRIP);
+		gl.glPopMatrix();
+		
+		gl.glColor4f(0, 1, 0, 1f);
+		floor.render(gl, GL10.GL_LINE_STRIP);
+		
 		
 	}
 

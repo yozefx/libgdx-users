@@ -10,8 +10,9 @@ public class CamUtil {
 	private static float aspect;
 
 	public static Camera orthoCam(float w, float h) {
+			float viewsize = 20;  // this should be related to the size of your scene	
 			aspect = h * 1f / w;
-			OrthographicCamera camera = new OrthographicCamera(10, (10 * aspect));
+			OrthographicCamera camera = new OrthographicCamera(viewsize, (viewsize * aspect));
 			campos = new Vector3(15, 15, 8);
 			camera.position.set(campos);
 			// camera.direction.set(-1, -1, -1);

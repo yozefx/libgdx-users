@@ -13,6 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
+/*
+ * Demo of decal that can be moved around in space
+ * 
+ * 
+ */
+
 package com.gdxuser.demos;
 
 import com.badlogic.gdx.Gdx;

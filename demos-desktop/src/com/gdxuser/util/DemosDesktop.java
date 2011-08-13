@@ -24,6 +24,6 @@ public class DemosDesktop {
 		// low tech switching method to choose which demo to view! comments!
 		// new LwjglApplication(new SimpleTest(), "Game", 480, 320, false);
 		// new LwjglApplication(new DecalTest(), "Game", 480, 320, false);
-		new LwjglApplication(new DecalWall(), "Game", 480, 320, false);
+		new LwjglApplication(new DecalWall(), "Game", 800, 480, false);
 	}
 }
