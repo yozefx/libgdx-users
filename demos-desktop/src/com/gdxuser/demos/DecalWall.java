@@ -1,6 +1,7 @@
 package com.gdxuser.demos;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
@@ -34,8 +35,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam = new GuOrthoCam(w, h, GRID_SIZE * 2);
 		oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
-		oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
-		// oCam.lookAt(0, 0, 0);
+		// oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
+		oCam.lookAt(0, 0, 0);
 
 		// put some basic furniture in
 		floor = new FloorGrid(GRID_SIZE, GRID_SIZE);
@@ -50,7 +51,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		player = new DecalSprite("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(4, 4);
 		player.sprite.setPosition(5, 2, 2);
-		
+
 		batch = new DecalBatch();
 
 		Gdx.input.setInputProcessor(this);
@@ -64,23 +65,24 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam.update();
 		oCam.apply(gl);
-		
+
 		batch.add(wall.sprite);
 		batch.flush();
-		// oCam.push();
-		
+
+		oCam.push();
+
 		Vector3 ppos = player.sprite.getPosition();
-//		oCam.position.set(ppos.x, ppos.y, ppos.z + 10);
-//		oCam.lookAt(ppos.x, ppos.y, ppos.z );
+		oCam.position.set(ppos.x, ppos.y, ppos.z + 10);
+//		oCam.lookAt(ppos.x, ppos.y, ppos.z);
 		oCam.update();
 		oCam.apply(gl);
 		batch.add(player.sprite);
 		batch.flush();
-		
-		// oCam.pop();
+
+		oCam.pop();
 		oCam.update();
 		oCam.apply(gl);
-		
+
 		gl.glPushMatrix();
 		gl.glColor4f(1, 0, 0, 1f);
 		cube.render(gl, GL10.GL_LINE_STRIP);
@@ -91,6 +93,17 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		floor.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
+	}
+
+	@Override
+	public boolean keyDown(int keyCode) {
+		super.keyDown(keyCode);
+		switch (keyCode) {
+		case Keys.C:
+
+		}
+		Log.out("campos:" + oCam.position);
+		return false;
 	}
 
 }
