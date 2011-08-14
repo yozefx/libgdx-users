@@ -173,9 +173,10 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 			Log.out("----------------------");
 			Log.out("A, D = move cam left / right");
 			Log.out("W, S = move cam forward / backward");
-			Log.out("Q, E = rotate cam counter-clockwise / clockwise");
-			Log.out("U, J = rotate cam up / down");
-			Log.out("N, M = orbit cam around player counter-clockwise / clockwise");
+			Log.out("Q, E = yaw (turn) cam left / right");
+			Log.out("U, J = pitch cam up / down");
+			Log.out("H, K = roll cam counter-clockwise / clockwise");
+			Log.out("N, M = orbit cam around origin (TODO: player) counter-clockwise / clockwise");
 			Log.out("C, SPACE = print cam / player position");
 			Log.out("----------------------");
 			break;
