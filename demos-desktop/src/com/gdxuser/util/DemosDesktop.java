@@ -16,8 +16,8 @@
 package com.gdxuser.util;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.gdxuser.demos.DecalWall;
-import com.gdxuser.demos.ModelViewer;
+import com.badlogic.gdx.tests.IsoCamTest;
+import com.badlogic.gdx.tests.TestCollection;
 
 public class DemosDesktop {
 	public static void main(String[] argv) {
@@ -25,6 +25,10 @@ public class DemosDesktop {
 		// low tech switching method to choose which demo to view! comments!
 		// new LwjglApplication(new SimpleTest(), "Game", 480, 320, false);
 		// new LwjglApplication(new DecalWall(), "Game", 800, 480, false);
-		new LwjglApplication(new ModelViewer(), "Game", 800, 480, false);
+		// new LwjglApplication(new ModelViewer(), "Game", 800, 480, false);
+		// new LwjglApplication(new Box2DTest(), "Game", 800, 480, false);
+//		new LwjglApplication(new PhysicsTest(), "Game", 800, 480, false);
+		// new LwjglApplication(new IsoCamTest(), "Game", 800, 480, false);
+		new LwjglApplication(new TestCollection(), "Game", 800, 480, false);
 	}
 }
