@@ -1,6 +1,7 @@
 package com.gdxuser.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
 
 public class Log {
 	
@@ -12,6 +13,10 @@ public class Log {
 	}
 	public static void out(String str, float x, float y) {
 		Gdx.app.log("gdxdemos", str + x + ", " + y);
+	}
+
+	public static void out(String str, Vector3 v) {
+		Gdx.app.log("gdxdemos", str + "[" + v.x + ", " + v.y +", " + v.z +"]");
 	}
 
 	//FIXME doesnt accept string right way

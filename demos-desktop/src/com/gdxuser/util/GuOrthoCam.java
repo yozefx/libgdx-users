@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class GuOrthoCam extends OrthographicCamera {
@@ -17,36 +18,68 @@ public class GuOrthoCam extends OrthographicCamera {
 	private static float aspect;
 	private Matrix4 comb;
 	private Vector3 dir;
+	private Vector2 fieldSize;
 
-	private static int VP_WIDTH;
-	private static int VP_HEIGHT;
-	private static float VP_ASPECT_RATIO;
-	private static final Vector3 CAM_POS_INITIAL = new Vector3(-10f, 10f, 20f);
+	private static float vpWidth;
+	private static float vpHeight;
+	private static float vpAspectRatio;
 	private static final float CAM_NEAR_INITIAL = 0.1f;
 	private static final float CAM_FAR_INITIAL = 200f;
+	
+	// viewSize should be related to the size of your scene
+	// scale compared to grid_size - bigger means more area around the playing field
+	private static final float VIEW_ZOOM = 1.2f;
+	private static final float CAM_HEIGHT = 10;		// how high up the cam is
+	
+	private static Vector3 camPos;
+	
 	private static Vector3 CAM_DIR_INITIAL;
 	private static Vector3 CAM_LOOKAT_INITIAL;
-	private static Vector3 CAM_UP_INITIAL = new Vector3(0.0f, 1.0f, 0.0f);
+	private static Vector3 CAM_UP_INITIAL = new Vector3(0, 1, 0);
 	private static float relative_rotation_angle = 0;
 
-	// viewsize should be related to the size of your scene
-	public GuOrthoCam(float VP_WIDTH, float VP_HEIGHT, float viewSize) {
-		super(viewSize, viewSize * (VP_HEIGHT / VP_WIDTH));
-		VP_ASPECT_RATIO = (float) VP_WIDTH / (float) VP_HEIGHT;
+	
+	public GuOrthoCam(float vpw, float vph, Vector2 field) {
+		super(field.x * VIEW_ZOOM, field.x * VIEW_ZOOM * (vph / vpw));
+		vpAspectRatio = (float) vpWidth / (float) vpHeight;
+		vpHeight = vph;
+		vpWidth = vpw;
+		fieldSize = field;
+		init();
+	}
 
-		Log.out("Cam-Up:        " + up.x + ", " + up.y + ", " + up.z);
-		Log.out("Cam-Position:  " + position.x + ", " + position.y + ", "
-				+ position.z);
-		Log.out("Cam-Direction: " + direction.x + ", " + direction.y + ", "
-				+ direction.z);
 
+	public void init() {
 		relative_rotation_angle = 0;
-		CAM_DIR_INITIAL = direction.cpy();
-		position.set(CAM_POS_INITIAL);
+
 		up.set(CAM_UP_INITIAL);
-		CAM_LOOKAT_INITIAL = new Vector3(VP_WIDTH / 2, 0, VP_HEIGHT / 2);
-		lookAt(CAM_LOOKAT_INITIAL.x, CAM_LOOKAT_INITIAL.y, CAM_LOOKAT_INITIAL.z);
+		camPos = new Vector3(- fieldSize.x, CAM_HEIGHT, 2* fieldSize.y );
+		up.set(CAM_UP_INITIAL);
+		position.set(camPos);
+
+//		relative_rotation_angle = 0;
+//		CAM_DIR_INITIAL = direction.cpy();
+//		CAM_LOOKAT_INITIAL = new Vector3(vpWidth / 2, 0, vpHeight / 2);
+		lookAt(fieldSize.x/2, 0, fieldSize.y/2);
 		update();
+		logInfo();
+		
+		// TODO why doesn't this work??
+//		direction.set(CAM_DIR_INITIAL);
+//		direction.set(0.6396022f,-0.42640147f,-0.6396022f); // <== HACK
+
+//		translate(CAM_POS_INITIAL.x, CAM_POS_INITIAL.y, CAM_POS_INITIAL.z);
+		update();
+	}
+	
+	private void logInfo() {
+		Log.out("Reset Camera:");
+		Log.out("Cam-Up:        " + up);
+		Log.out("Cam-Position:  " + position);
+		Log.out("Cam-Direction: " + direction);
+		Log.out("Cam-LookAt: " + CAM_LOOKAT_INITIAL);
+		Log.out("VP_HEIGHT: " + vpHeight);
+
 	}
 
 	public void push() {
@@ -157,28 +190,6 @@ public class GuOrthoCam extends OrthographicCamera {
 		update();
 	}
 
-	public void init() {
-		relative_rotation_angle = 0;
-
-		up.set(CAM_UP_INITIAL);
-		position.set(0, 0, 0);
-
-		// TODO why doesn't this work??
-//		direction.set(CAM_DIR_INITIAL);
-		direction.set(0.6396022f,-0.42640147f,-0.6396022f); // <== HACK
-
-		translate(CAM_POS_INITIAL.x, CAM_POS_INITIAL.y, CAM_POS_INITIAL.z);
-		update();
-
-		Log.out("Reset Camera:");
-		Log.out("Cam-Up:        " + up.x + ", " + up.y + ", " + up.z);
-		Log.out("Cam-Position:  " + position.x + ", " + position.y + ", "
-				+ position.z);
-		Log.out("Cam-Direction: " + direction.x + ", " + direction.y + ", "
-				+ direction.z);
-		Log.out("Cam-LookAt: " + CAM_LOOKAT_INITIAL.x + ", "
-				+ CAM_LOOKAT_INITIAL.y + ", " + CAM_LOOKAT_INITIAL.z);
-	}
 
 	public void orbit(float amt_rotate, Vector3 target) {
 		float altitude = 10f;

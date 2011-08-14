@@ -10,15 +10,19 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderOld;
+import com.badlogic.gdx.math.Vector2;
 
 public class FloorGrid {
 	int xcount, zcount;
 	private Mesh path;
 
 	public FloorGrid(int tx, int tz) {
+	}
+
+	public FloorGrid(Vector2 fieldSize) {
 		Mesh oneTile = oneTile(1, 0, 1);
-		xcount = tx;
-		zcount = tz;
+		xcount = (int) fieldSize.x;
+		zcount = (int) fieldSize.y;
 	}
 
 	public Mesh oneTile(int x, int y, int z) {
