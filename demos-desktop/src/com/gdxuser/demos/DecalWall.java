@@ -63,7 +63,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		// floorMesh = new MeshHelper("data/3d/floorplan.obj");
 
 		cube = new Cube();
-		cube.scale(0.5f).pos(0f, 0.5f, 0f);
+		cube.scale(0.5f).setPos(0f, 0.5f, 0f).setColor(0, 1, 0);
 
 		// decals for walls
 		wall = new DecalSprite().build("data/decals/256/blueflower.png");

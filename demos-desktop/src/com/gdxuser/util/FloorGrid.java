@@ -11,10 +11,12 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderOld;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class FloorGrid {
 	int xcount, zcount;
 	private Mesh path;
+	private Vector3 color = new Vector3(1,1,1);
 
 	public FloorGrid(int tx, int tz) {
 	}
@@ -43,6 +45,17 @@ public class FloorGrid {
 				gl.glPopMatrix();
 			}
 		}
+		gl.glPopMatrix();
+	}
+
+	public FloorGrid setColor(float r, float g, float b) {
+		color = new Vector3(r,g,b);
+		return this;
+	}
+	
+	public void renderWireframe(GL10 gl) {
+		gl.glColor4f(color.x, color.y, color.z, 1);
+		render(gl, GL10.GL_LINE_STRIP);
 	}
 
 

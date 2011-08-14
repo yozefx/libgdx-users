@@ -19,10 +19,13 @@ public class Log {
 		Gdx.app.log("gdxdemos", str + "[" + v.x + ", " + v.y +", " + v.z +"]");
 	}
 
-	//FIXME doesnt accept string right way
+	//FIXME doesn't accept string right way
 	static void splog(String s, float... vars) {
 		String s2 = String.format(s, vars);
-		out(s2);
+		Log.out(s2);
+	}
+	public static void hr() {
+		Log.out("------------------------");
 	}
 
 
