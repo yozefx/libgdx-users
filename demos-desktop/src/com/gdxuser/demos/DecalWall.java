@@ -1,5 +1,7 @@
 package com.gdxuser.demos;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -29,7 +31,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private GuOrthoCam oCam;
 	private Cube cube;
 	FloorGrid floor;
-	private DecalSprite wall1;
 	private DecalBatch decalBatch;
 	private SpriteBatch spriteBatch2d;
 	private DecalSprite player;
@@ -38,7 +39,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private Texture cloudTex;
 	private Vector3 ppos;
 	private int ctr = 0;
-	private DecalSprite wall2;
+//	private DecalSprite[] walls = new DecalSprite[5];
+	private DecalSprite wall;
+	private ArrayList<DecalSprite> walls = new ArrayList();
 
 	@Override
 	public void create() {
@@ -62,17 +65,49 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cube.scale(0.5f).pos(0f, 0.5f, 0f);
 		
 		// decals for walls
-		wall1 = new DecalSprite().build("data/decals/256/3d_side.png");
-		wall1.sprite.setDimensions(6, 6);
-		wall1.sprite.setPosition(5, 3, 0);
-		float dh = wall1.sprite.getHeight();
-		float dw = wall1.sprite.getWidth();
-		Log.out("decal size:" + dh + "," + dw);
+		wall = new DecalSprite().build("data/decals/256/blueflower.png");
+		wall.sprite.setDimensions(6, 6);
+		wall.sprite.setPosition(5, 3, 0);
+		walls.add(wall);
 
-		wall2 = new DecalSprite().build("data/decals/64/sakura.png");
-		wall2.sprite.setDimensions(6, 6);
-		wall2.sprite.setPosition(0, 3, 5);
-		wall2.sprite.rotateY(90f);
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(0, 1, GRID_SIZE);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(2, 1, GRID_SIZE);
+		walls.add(wall);
+		
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(4, 1, GRID_SIZE);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.rotateY(90);
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(GRID_SIZE, 1, 1);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.rotateY(90);
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(GRID_SIZE, 1, 3);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
+		wall.sprite.rotateY(90);
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(GRID_SIZE, 3, 3);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
+		wall.sprite.rotateY(90);
+		wall.sprite.setPosition(GRID_SIZE, 2, 6);
+		wall.sprite.setDimensions(4, 4);
+		walls.add(wall);
 
 		// 3d sprite batch
 		player = new DecalSprite().build("data/players/full/128/avatar1.png");
@@ -107,8 +142,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.update();
 		oCam.apply(gl);
 
-		decalBatch.add(wall1.sprite);
-		decalBatch.add(wall2.sprite);
+		for (DecalSprite oneWall : walls) {
+			decalBatch.add(oneWall.sprite);
+		}
 		decalBatch.flush();
 
 		oCam.push();
