@@ -29,8 +29,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private GuOrthoCam oCam;
 	private Cube cube;
 	FloorGrid floor;
-	private DecalSprite wall;
-	private DecalBatch decalBatch3d;
+	private DecalSprite wall1;
+	private DecalBatch decalBatch;
 	private SpriteBatch spriteBatch2d;
 	private DecalSprite player;
 	private MeshHelper floorMesh;
@@ -38,6 +38,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private Texture cloudTex;
 	private Vector3 ppos;
 	private int ctr = 0;
+	private DecalSprite wall2;
 
 	@Override
 	public void create() {
@@ -59,15 +60,22 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		cube = new Cube();
 		cube.scale(0.5f).pos(0f, 0.5f, 0f);
-		wall = new DecalSprite("data/decals/256/3d_side.png");
-		wall.sprite.setDimensions(6, 6);
-		wall.sprite.setPosition(5, 3, 0);
-		float dh = wall.sprite.getHeight();
-		float dw = wall.sprite.getWidth();
+		
+		// decals for walls
+		wall1 = new DecalSprite().build("data/decals/256/3d_side.png");
+		wall1.sprite.setDimensions(6, 6);
+		wall1.sprite.setPosition(5, 3, 0);
+		float dh = wall1.sprite.getHeight();
+		float dw = wall1.sprite.getWidth();
 		Log.out("decal size:" + dh + "," + dw);
 
+		wall2 = new DecalSprite().build("data/decals/64/sakura.png");
+		wall2.sprite.setDimensions(6, 6);
+		wall2.sprite.setPosition(0, 3, 5);
+		wall2.sprite.rotateY(90f);
+
 		// 3d sprite batch
-		player = new DecalSprite("data/players/full/128/avatar1.png");
+		player = new DecalSprite().build("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(4, 4);
 		player.sprite.setPosition(4, 2, 2);
 
@@ -85,7 +93,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cloud = Billboard.make(imgPath);
 		cloud.wpos(2f, 3f, 2f);
 
-		decalBatch3d = new DecalBatch();
+		decalBatch = new DecalBatch();
 
 		Gdx.input.setInputProcessor(this);
 	}
@@ -99,8 +107,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.update();
 		oCam.apply(gl);
 
-		decalBatch3d.add(wall.sprite);
-		decalBatch3d.flush();
+		decalBatch.add(wall1.sprite);
+		decalBatch.add(wall2.sprite);
+		decalBatch.flush();
 
 		oCam.push();
 
@@ -114,8 +123,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam.update();
 		oCam.apply(gl);
-		decalBatch3d.add(player.sprite);
-		decalBatch3d.flush();
+		decalBatch.add(player.sprite);
+		decalBatch.flush();
 
 		oCam.pop();
 		oCam.update();

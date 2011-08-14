@@ -1,3 +1,11 @@
+/*
+ * Billboard is a 2d sprite that renders its location on screen
+ * based on 3D world position. think of it like a 3D sprite that is always
+ * facing the user.
+ * 
+ * author: yatayata
+ */
+
 package com.gdxuser.util;
 
 import com.badlogic.gdx.Gdx;
