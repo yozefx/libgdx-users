@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.actors.Image;
 import com.gdxuser.util.Billboard;
@@ -25,7 +26,7 @@ import com.gdxuser.util.Log;
 import com.gdxuser.util.MeshHelper;
 
 public class DecalWall extends DemoWrapper implements InputProcessor {
-	private static final int GRID_SIZE = 10;
+	private static final Vector2 fieldSize = new Vector2(10, 10);
 	float w;
 	float h;
 	private GuOrthoCam oCam;
@@ -39,7 +40,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private Texture cloudTex;
 	private Vector3 ppos;
 	private int ctr = 0;
-//	private DecalSprite[] walls = new DecalSprite[5];
+	// private DecalSprite[] walls = new DecalSprite[5];
 	private DecalSprite wall;
 	private ArrayList<DecalSprite> walls = new ArrayList();
 
@@ -51,19 +52,19 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
 
-		oCam = new GuOrthoCam(w, h, GRID_SIZE * 2);
-		oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
-		oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
+		oCam = new GuOrthoCam(w, h, fieldSize);
+		// oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
+		// oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
 		// oCam.lookAt(0, 0, 0);
 
 		// put some basic furniture in
-		floor = new FloorGrid(GRID_SIZE, GRID_SIZE);
+		floor = new FloorGrid(fieldSize);
 
 		// floorMesh = new MeshHelper("data/3d/floorplan.obj");
 
 		cube = new Cube();
-		cube.scale(0.5f).pos(0f, 0.5f, 0f);
-		
+		cube.scale(0.5f).setPos(0f, 0.5f, 0f).setColor(0, 1, 0);
+
 		// decals for walls
 		wall = new DecalSprite().build("data/decals/256/blueflower.png");
 		wall.sprite.setDimensions(6, 6);
@@ -72,40 +73,40 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(0, 1, GRID_SIZE);
+		wall.sprite.setPosition(0, 1, fieldSize.y);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(2, 1, GRID_SIZE);
-		walls.add(wall);
-		
-		wall = new DecalSprite().build("data/decals/64/sakura.png");
-		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(4, 1, GRID_SIZE);
+		wall.sprite.setPosition(2, 1, fieldSize.y);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
-		wall.sprite.rotateY(90);
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(GRID_SIZE, 1, 1);
+		wall.sprite.setPosition(4, 1, fieldSize.y);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.rotateY(90);
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(GRID_SIZE, 1, 3);
+		wall.sprite.setPosition(fieldSize.x, 1, 1);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.rotateY(90);
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(fieldSize.x, 1, 3);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
 		wall.sprite.rotateY(90);
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(GRID_SIZE, 3, 3);
+		wall.sprite.setPosition(fieldSize.x, 3, 3);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
 		wall.sprite.rotateY(90);
-		wall.sprite.setPosition(GRID_SIZE, 2, 6);
+		wall.sprite.setPosition(fieldSize.x, 2, 6);
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
 
@@ -225,7 +226,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 			Log.out("C, SPACE = print cam / player position");
 			Log.out("----------------------");
 			break;
-		
+
 		case Keys.C:
 			Log.out("cam_pos:  " + oCam.position);
 			Log.out("cam_up:   " + oCam.up);

@@ -1,6 +1,7 @@
 package com.gdxuser.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
 
 public class Log {
 	
@@ -14,10 +15,17 @@ public class Log {
 		Gdx.app.log("gdxdemos", str + x + ", " + y);
 	}
 
-	//FIXME doesnt accept string right way
+	public static void out(String str, Vector3 v) {
+		Gdx.app.log("gdxdemos", str + "[" + v.x + ", " + v.y +", " + v.z +"]");
+	}
+
+	//FIXME doesn't accept string right way
 	static void splog(String s, float... vars) {
 		String s2 = String.format(s, vars);
-		out(s2);
+		Log.out(s2);
+	}
+	public static void hr() {
+		Log.out("------------------------");
 	}
 
 

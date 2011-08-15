@@ -5,8 +5,10 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class GuOrthoCam extends OrthographicCamera {
@@ -17,36 +19,75 @@ public class GuOrthoCam extends OrthographicCamera {
 	private static float aspect;
 	private Matrix4 comb;
 	private Vector3 dir;
+	private Vector2 fieldSize;
+	private Vector3 targetVec = new Vector3(0, 0, 0); // need a default value
+	private Mesh targetObj;
 
-	private static int VP_WIDTH;
-	private static int VP_HEIGHT;
-	private static float VP_ASPECT_RATIO;
-	private static final Vector3 CAM_POS_INITIAL = new Vector3(-10f, 10f, 20f);
+	private static float vpWidth;
+	private static float vpHeight;
+	private static float vpAspectRatio;
 	private static final float CAM_NEAR_INITIAL = 0.1f;
 	private static final float CAM_FAR_INITIAL = 200f;
+
+	// viewSize should be related to the size of your scene
+	// scale compared to grid_size - bigger means more area around the playing
+	// field
+	private static final float VIEW_ZOOM = 1.2f;
+	private static final float CAM_HEIGHT = 10; // how high up the cam is
+
+	private static Vector3 camPos;
+
 	private static Vector3 CAM_DIR_INITIAL;
 	private static Vector3 CAM_LOOKAT_INITIAL;
-	private static Vector3 CAM_UP_INITIAL = new Vector3(0.0f, 1.0f, 0.0f);
+	private static Vector3 CAM_UP_INITIAL = new Vector3(0, 1, 0);
 	private static float relative_rotation_angle = 0;
 
-	// viewsize should be related to the size of your scene
-	public GuOrthoCam(float VP_WIDTH, float VP_HEIGHT, float viewSize) {
-		super(viewSize, viewSize * (VP_HEIGHT / VP_WIDTH));
-		VP_ASPECT_RATIO = (float) VP_WIDTH / (float) VP_HEIGHT;
+	public GuOrthoCam(float vpw, float vph, Vector2 field) {
+		// super method calls an update() so all better be ready in our update
+		super(field.x * VIEW_ZOOM, field.x * VIEW_ZOOM * (vph / vpw));
+		vpAspectRatio = (float) vpWidth / (float) vpHeight;
+		vpHeight = vph;
+		vpWidth = vpw;
+		fieldSize = field;
+		init();
+	}
 
-		Log.out("Cam-Up:        " + up.x + ", " + up.y + ", " + up.z);
-		Log.out("Cam-Position:  " + position.x + ", " + position.y + ", "
-				+ position.z);
-		Log.out("Cam-Direction: " + direction.x + ", " + direction.y + ", "
-				+ direction.z);
+	// TODO - calc center of passed in mesh as targetVec
+	public void setTargetObj(Mesh obj) {
+		targetObj = obj;
+	}
 
+	public void setTargetVec(float x, float y, float z) {
+		Log.out("set lookAt");
+		targetVec = new Vector3(x, y, z);
+	}
+
+	public void init() {
 		relative_rotation_angle = 0;
-		CAM_DIR_INITIAL = direction.cpy();
-		position.set(CAM_POS_INITIAL);
 		up.set(CAM_UP_INITIAL);
-		CAM_LOOKAT_INITIAL = new Vector3(VP_WIDTH / 2, 0, VP_HEIGHT / 2);
-		lookAt(CAM_LOOKAT_INITIAL.x, CAM_LOOKAT_INITIAL.y, CAM_LOOKAT_INITIAL.z);
+		camPos = new Vector3(-fieldSize.x, CAM_HEIGHT, 2 * fieldSize.y);
+		position.set(camPos);
+		setTargetVec(fieldSize.x / 2, 0, fieldSize.y / 2); // set default pos
+		updateLookAt();
 		update();
+		logInfo();
+	}
+
+	private void updateLookAt() {
+		if (targetVec == null) {
+			Log.out("caught updateLookAt before init()");
+			return;
+		}
+		lookAt(targetVec.x, targetVec.y, targetVec.z);
+	}
+
+	private void logInfo() {
+		Log.out("Reset Camera:");
+		Log.out("Cam-Up:        " + up);
+		Log.out("Cam-Position:  " + position);
+		Log.out("Cam-Direction: " + direction);
+		Log.out("Cam-LookAt: " + CAM_LOOKAT_INITIAL);
+		Log.out("VP_HEIGHT: " + vpHeight);
 	}
 
 	public void push() {
@@ -61,35 +102,26 @@ public class GuOrthoCam extends OrthographicCamera {
 
 	@Override
 	public void update() {
+		updateLookAt();
 		super.update();
 	}
 
 	public void handleKeys() {
 		float amt = CAMSPEED * Gdx.graphics.getDeltaTime();
 
-		if(Gdx.input.isKeyPressed(Keys.W)) {
-            // moves camera along z axis (world coordinates) into screen
-//			translate(0, 0, -amt);
-
-			// moves camera along its direction vector
+		if (Gdx.input.isKeyPressed(Keys.W)) {
 			translate(direction.x, 0, direction.z);
 		}
 		if (Gdx.input.isKeyPressed(Keys.S)) {
-            // moves camera along z axis (world coordinates) out of screen
-//			translate(0, 0, amt);
-
-			// moves camera along its reversed direction vector
 			translate(-direction.x, 0, -direction.z);
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.A)) {
-//			translate(-amt, 0, 0);
 			Vector3 right = new Vector3(direction);
 			right.crs(up);
 			translate(-right.x, 0, -right.z);
 		}
 		if (Gdx.input.isKeyPressed(Keys.D)) {
-//			translate(amt, 0, 0);
 			Vector3 right = new Vector3(direction);
 			right.crs(up);
 			translate(right.x, 0, right.z);
@@ -114,7 +146,6 @@ public class GuOrthoCam extends OrthographicCamera {
 			rotate(-amt, 0, 0, 1);
 		}
 
-		
 		// moves NEAR away from cam
 		if (Gdx.input.isKeyPressed(Keys.PLUS)) {
 			near += amt;
@@ -143,41 +174,40 @@ public class GuOrthoCam extends OrthographicCamera {
 
 		// Orbit around target left
 		if (Gdx.input.isKeyPressed(Keys.N)) {
-			orbit(relative_rotation_angle += amt / 100, new Vector3(0, 0, 0));
+			orbit(relative_rotation_angle += amt / 100, targetVec);
 		}
 		// Orbit around target right
 		if (Gdx.input.isKeyPressed(Keys.M)) {
-			orbit(relative_rotation_angle -= amt / 100, new Vector3(0, 0, 0));
+			orbit(relative_rotation_angle -= amt / 100, targetVec);
 		}
 
 		// Reset scene / reload starting values
 		if (Gdx.input.isKeyPressed(Keys.R)) {
 			init();
 		}
+
+		if (Gdx.input.isKeyPressed(Keys.I)) {
+			printInfo();
+		}
+
 		update();
 	}
 
-	public void init() {
-		relative_rotation_angle = 0;
-
-		up.set(CAM_UP_INITIAL);
-		position.set(0, 0, 0);
-
-		// TODO why doesn't this work??
-//		direction.set(CAM_DIR_INITIAL);
-		direction.set(0.6396022f,-0.42640147f,-0.6396022f); // <== HACK
-
-		translate(CAM_POS_INITIAL.x, CAM_POS_INITIAL.y, CAM_POS_INITIAL.z);
-		update();
-
-		Log.out("Reset Camera:");
-		Log.out("Cam-Up:        " + up.x + ", " + up.y + ", " + up.z);
-		Log.out("Cam-Position:  " + position.x + ", " + position.y + ", "
-				+ position.z);
-		Log.out("Cam-Direction: " + direction.x + ", " + direction.y + ", "
-				+ direction.z);
-		Log.out("Cam-LookAt: " + CAM_LOOKAT_INITIAL.x + ", "
-				+ CAM_LOOKAT_INITIAL.y + ", " + CAM_LOOKAT_INITIAL.z);
+	private void printInfo() {
+		Log.out("Key Info (I): \n ESC = quit demo");
+		Log.out("A, D = move cam left / right");
+		Log.out("W, S = move cam forward / backward");
+		Log.out("Q, E = yaw (turn) cam left / right");
+		Log.out("U, J = pitch cam up / down");
+		Log.out("H, K = roll cam counter-clockwise / clockwise");
+		Log.out("N, M = orbit cam around origin (TODO: player) counter-clockwise / clockwise");
+		Log.out("C, SPACE = print cam / player position");
+		Log.hr();
+		Log.out("cam_pos:  " + position);
+		Log.out("cam_up:   " + up);
+		Log.out("cam_dir:  " + direction);
+		Log.out("targetVec:  " + targetVec);
+		Log.hr();
 	}
 
 	public void orbit(float amt_rotate, Vector3 target) {
@@ -202,9 +232,9 @@ public class GuOrthoCam extends OrthographicCamera {
 		update();
 	}
 
-	 public void zoom(float amt_zoom) {
-	 // TODO WIP
-	 update();
-	 }
+	public void zoom(float amt_zoom) {
+		// TODO WIP
+		update();
+	}
 
 }

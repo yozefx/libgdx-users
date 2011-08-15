@@ -2,7 +2,6 @@ package com.gdxuser.demos;
 
 import java.util.LinkedList;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
@@ -14,8 +13,9 @@ import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.SimpleOrthoGroupStrategy;
 import com.badlogic.gdx.math.WindowedMean;
+import com.gdxuser.util.DemoWrapper;
 
-public class DecalTest extends Game {
+public class DecalTest extends DemoWrapper {
 	public static final int TARGET_FPS = 40;
 	public static final int INITIAL_RENDERED = 100;
 	private boolean willItBlend_that_is_the_question = true;

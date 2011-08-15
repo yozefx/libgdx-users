@@ -36,7 +36,7 @@ import com.gdxuser.demos.SpriteTest;
 public class DemosAndroid extends AndroidApplication {
 	@Override public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initialize(new DecalTest(), false);
+		initialize(new DecalWall(), false);
 //		initialize(new DecalTransform(), false);
 //		initialize(new DecalWall(), false);
 //		initialize(new SimpleTest(), false);
