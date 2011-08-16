@@ -43,6 +43,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	// private DecalSprite[] walls = new DecalSprite[5];
 	private DecalSprite wall;
 	private ArrayList<DecalSprite> walls = new ArrayList();
+	private ArrayList<DecalSprite> badges = new ArrayList();
 
 	@Override
 	public void create() {
@@ -110,6 +111,10 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
 
+		
+		// some stuff that should face the camera
+		badges = getBadges();
+		
 
 		// 2d player
 		// player = new
@@ -134,6 +139,18 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		Gdx.input.setInputProcessor(this);
 	}
 
+	private ArrayList<DecalSprite> getBadges() {
+		for(int x=2; x<10; x+=2) {
+			DecalSprite badge = new DecalSprite().build("data/icons/128/star.png");
+			// badge.sprite.rotateY(90);
+			badge.sprite.setDimensions(1, 1);
+			badge.sprite.setPosition(x, 1, 6);
+			badges.add(badge);
+		}
+
+		return badges;
+	}
+
 	@Override
 	public void render() {
 		GL10 gl = Gdx.app.getGraphics().getGL10();
@@ -148,6 +165,11 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		for (DecalSprite oneWall : walls) {
 			decalBatch.add(oneWall.sprite);
 		}
+
+		for (DecalSprite oneBadge : badges) {
+			decalBatch.add(oneBadge.sprite);
+		}
+		
 		decalBatch.flush();
 
 		oCam.push();
@@ -190,7 +212,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		}
 		spriteBatch2d.begin();
 		cloud.setPosition(cloud.spos.x, cloud.spos.y);
-		cloud.draw(spriteBatch2d, 0.5f);
+		cloud.draw(spriteBatch2d, 0.8f);
 
 		player.setPosition(player.spos.x, player.spos.y);
 		player.draw(spriteBatch2d, 1);
