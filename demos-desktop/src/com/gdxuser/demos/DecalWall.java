@@ -1,6 +1,7 @@
 package com.gdxuser.demos;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
@@ -142,9 +143,12 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private ArrayList<DecalSprite> getBadges() {
 		for(int x=2; x<10; x+=2) {
 			DecalSprite badge = new DecalSprite().build("data/icons/128/star.png");
-			// badge.sprite.rotateY(90);
 			badge.sprite.setDimensions(1, 1);
 			badge.sprite.setPosition(x, 1, 6);
+
+			// make the Badges always facing the camera
+			badge.faceCamera(oCam);
+
 			badges.add(badge);
 		}
 
@@ -167,6 +171,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		}
 
 		for (DecalSprite oneBadge : badges) {
+			oneBadge.faceCamera(oCam);
 			decalBatch.add(oneBadge.sprite);
 		}
 		
