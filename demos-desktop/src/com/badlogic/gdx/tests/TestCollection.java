@@ -20,7 +20,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.gdxuser.demos.DecalTest;
 import com.gdxuser.util.DemoWrapper;
 
 public class TestCollection extends DemoWrapper implements InputProcessor {
