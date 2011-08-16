@@ -25,9 +25,7 @@ import com.gdxuser.util.DemoWrapper;
 public class TestCollection extends DemoWrapper implements InputProcessor {
 
 	private final DemoWrapper[] tests = {
-			new PhysicsTest(),
-			new DecalTest(),
-			new IsoCamTest() };
+			new ParticleEmitterTest(), new PhysicsTest(), new IsoCamTest(), new DecalTest() };
 
 	private int testIndex = 0;
 
