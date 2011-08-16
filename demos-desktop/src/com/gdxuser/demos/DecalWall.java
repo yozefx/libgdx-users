@@ -110,15 +110,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
 
-		// 2d sprites
-		spriteBatch2d = new SpriteBatch();
-		spriteBatch2d.enableBlending();
-
-		// 2d cloud sprite
-		String imgPath = "data/icons/128/thunder.png";
-		cloud = Billboard.make(imgPath);
-		cloud.setMove(1f,0f,0f);
-		cloud.wpos(2f, 1f, 2f);
 
 		// 2d player
 		// player = new
@@ -129,7 +120,16 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		player = Billboard.make("data/players/full/128/avatar1.png");
 		player.wpos(2, 0, 2);
 
+		// 2d cloud sprite
+		String imgPath = "data/icons/128/thunder.png";
+		cloud = Billboard.make(imgPath);
+		cloud.setMove(1f,0f,0f);
+		cloud.wpos(2f, 1f, 2f);
+
+		// batches
 		decalBatch = new DecalBatch();
+		spriteBatch2d = new SpriteBatch();
+		spriteBatch2d.enableBlending();
 
 		Gdx.input.setInputProcessor(this);
 	}
