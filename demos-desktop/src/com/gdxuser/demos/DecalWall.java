@@ -34,7 +34,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	FloorGrid floor;
 	private DecalBatch decalBatch;
 	private SpriteBatch spriteBatch2d;
-	private DecalSprite player;
+	private Billboard player;
 	private MeshHelper floorMesh;
 	private Billboard cloud;
 	private Texture cloudTex;
@@ -110,16 +110,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
 
-		// 3d sprite batch
-		player = new DecalSprite().build("data/players/full/128/avatar1.png");
-		player.sprite.setDimensions(4, 4);
-		player.sprite.setPosition(4, 2, 2);
-
-		// 2d cloud sprite
-		// cloud = new ImageSprite("cloud", "data/icons/128/thunder.png");
-		// cloud.x = 10;
-		// cloud.y = 10;
-
 		// 2d sprites
 		spriteBatch2d = new SpriteBatch();
 		spriteBatch2d.enableBlending();
@@ -127,7 +117,17 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		// 2d cloud sprite
 		String imgPath = "data/icons/128/thunder.png";
 		cloud = Billboard.make(imgPath);
-		cloud.wpos(2f, 3f, 2f);
+		cloud.setMove(1f,0f,0f);
+		cloud.wpos(2f, 1f, 2f);
+
+		// 2d player
+		// player = new
+		// DecalSprite().build("data/players/full/128/avatar1.png");
+		// player.sprite.setDimensions(4, 4);
+		// player.sprite.setPosition(4, 2, 2);
+
+		player = Billboard.make("data/players/full/128/avatar1.png");
+		player.wpos(2, 0, 2);
 
 		decalBatch = new DecalBatch();
 
@@ -140,6 +140,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		// gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
+		float delta = Gdx.graphics.getDeltaTime();
+
 		oCam.update();
 		oCam.apply(gl);
 
@@ -150,17 +152,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 		oCam.push();
 
-		ppos = player.sprite.getPosition();
-		// Log.out("x=" + ppos.x + "y=" + ppos.y + "z=" + ppos.z);
-		// oCam.position.set(5f, 2f, 4f);
-
-		// oCam.position.set(ppos.x, ppos.y, ppos.z+10);
-		// oCam.lookAt(ppos.x, ppos.y, ppos.z);
-		// player.sprite.rotateY(-45f);
-
 		oCam.update();
 		oCam.apply(gl);
-		decalBatch.add(player.sprite);
+		// decalBatch.add(player.sprite);
 		decalBatch.flush();
 
 		oCam.pop();
@@ -174,19 +168,20 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cube.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 
-		drawClouds(gl);
+		drawClouds(gl, delta);
 
 		gl.glPopMatrix();
-
-		// Log.out("ppos = " + ppos);
 		oCam.handleKeys();
 
 	}
 
-	private void drawClouds(GL10 gl) {
+	private void drawClouds(GL10 gl, float delta) {
 		gl.glPushMatrix();
 		cloud.project(oCam);
-		cloud.update();
+		cloud.update(delta);
+
+		player.project(oCam);
+		player.update(delta);
 
 		if (ctr++ % 100 == 0) {
 			// Log.out("ppos: " + ppos + "  player:");
@@ -196,6 +191,10 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		spriteBatch2d.begin();
 		cloud.setPosition(cloud.spos.x, cloud.spos.y);
 		cloud.draw(spriteBatch2d, 0.5f);
+
+		player.setPosition(player.spos.x, player.spos.y);
+		player.draw(spriteBatch2d, 1);
+
 		spriteBatch2d.end();
 		gl.glPopMatrix();
 	}

@@ -16,10 +16,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.actors.Image;
 
 public class Billboard extends Sprite {
-	private static final float ANIM_SPEED = 0.1f;
-	public Vector3 wpos;	// WORLD position
-	public Vector3 spos;	// SCREEN pos
-	public Vector3 wmove;
+	private static final float ANIM_SPEED = 1f;
+	public Vector3 wpos = new Vector3(0,0,0);	// WORLD position
+	public Vector3 spos = new Vector3(0,0,0);	// SCREEN pos
+	public Vector3 wmove = new Vector3(0,0,0);
 
 	public static Billboard make(String imgPath) {
 		Texture tex = new Texture(Gdx.files.internal(imgPath));
@@ -29,11 +29,10 @@ public class Billboard extends Sprite {
 	
 	public Billboard(Texture tex) {
 		super(tex);
-		wmove = new Vector3(ANIM_SPEED, 0, 0);
 	}
 
-	public void render() {
-
+	public void setMove(float x, float y, float z) {
+		wmove = new Vector3(x,y,z);	
 	}
 
 	public void wpos(float x, float y, float z) {
@@ -50,12 +49,16 @@ public class Billboard extends Sprite {
 		return spos;
 	}
 	
-	public void update() {
-		wpos.add(wmove);
+	public void update(float delta) {
+		Vector3 moveAmt = wmove;
+		moveAmt.mul(delta);
+		// Log.out("moveamt:" + moveAmt);
+		wpos.add(moveAmt);
 		if (wpos.x > 10 || wpos.x<0 ) {
 			wmove.x = -wmove.x;
 		}
 	}
+
 
 
 }
