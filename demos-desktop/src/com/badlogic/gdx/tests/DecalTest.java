@@ -1,4 +1,4 @@
-package com.gdxuser.demos;
+package com.badlogic.gdx.tests;
 
 import java.util.LinkedList;
 

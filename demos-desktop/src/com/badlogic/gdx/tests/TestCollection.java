@@ -20,11 +20,10 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.gdxuser.demos.DecalTest;
 import com.gdxuser.util.DemoWrapper;
 
 public class TestCollection extends DemoWrapper implements InputProcessor {
-	
+
 	private final DemoWrapper[] tests = {
 			new ParticleEmitterTest(), new PhysicsTest(), new IsoCamTest(), new DecalTest() };
 
@@ -33,12 +32,12 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 	private Application app = null;
 
 	@Override
-	public void render () {
+	public void render() {
 		tests[testIndex].render();
 	}
 
 	@Override
-	public void create () {
+	public void create() {
 		if (this.app == null) {
 			this.app = Gdx.app;
 			DemoWrapper test = tests[testIndex];
@@ -49,15 +48,19 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 	}
 
 	@Override
-	public boolean keyDown (int keycode) {
+	public boolean keyDown(int keycode) {
 		if (keycode == Keys.SPACE) {
-			app.log("TestCollection", "disposing test '" + tests[testIndex].getClass().getName());
+			app.log("TestCollection", "disposing test #" + testIndex + " '"
+					+ tests[testIndex].getClass().getName() + "'");
 			tests[testIndex].dispose();
 			testIndex++;
-			if (testIndex >= tests.length) testIndex = 0;
+			if (testIndex >= tests.length) {
+				testIndex = 0;
+			}
 			DemoWrapper test = tests[testIndex];
 			test.create();
-			app.log("TestCollection", "created test '" + tests[testIndex].getClass().getName());
+			app.log("TestCollection", "created test #" + testIndex + " '"
+					+ tests[testIndex].getClass().getName() + "'");
 		} else {
 			tests[testIndex].keyDown(keycode);
 		}
@@ -66,47 +69,47 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 	}
 
 	@Override
-	public boolean keyTyped (char character) {
+	public boolean keyTyped(char character) {
 		tests[testIndex].keyTyped(character);
 		return false;
 	}
 
 	@Override
-	public boolean keyUp (int keycode) {
+	public boolean keyUp(int keycode) {
 		tests[testIndex].keyUp(keycode);
 		return false;
 	}
 
 	@Override
-	public boolean touchDown (int x, int y, int pointer, int button) {
+	public boolean touchDown(int x, int y, int pointer, int button) {
 		tests[testIndex].touchDown(x, y, pointer, button);
 		return false;
 	}
 
 	@Override
-	public boolean touchDragged (int x, int y, int pointer) {
+	public boolean touchDragged(int x, int y, int pointer) {
 		tests[testIndex].touchDragged(x, y, pointer);
 		return false;
 	}
 
 	@Override
-	public boolean touchUp (int x, int y, int pointer, int button) {
+	public boolean touchUp(int x, int y, int pointer, int button) {
 		tests[testIndex].touchUp(x, y, pointer, button);
 		return false;
 	}
 
 	@Override
-	public boolean needsGL20 () {
+	public boolean needsGL20() {
 		return false;
 	}
 
 	@Override
-	public boolean touchMoved (int x, int y) {
+	public boolean touchMoved(int x, int y) {
 		return false;
 	}
 
 	@Override
-	public boolean scrolled (int amount) {
+	public boolean scrolled(int amount) {
 		return false;
 	}
 }
