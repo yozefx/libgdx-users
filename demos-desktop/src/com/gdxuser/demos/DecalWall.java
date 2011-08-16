@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
+import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.actors.Image;
@@ -41,6 +43,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private Texture cloudTex;
 	private Vector3 ppos;
 	private int ctr = 0;
+	private GroupStrategy strategy;
 	// private DecalSprite[] walls = new DecalSprite[5];
 	private DecalSprite wall;
 	private ArrayList<DecalSprite> walls = new ArrayList();
@@ -133,7 +136,8 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		cloud.wpos(2f, 1f, 2f);
 
 		// batches
-		decalBatch = new DecalBatch();
+		strategy = new CameraGroupStrategy(oCam);		
+		decalBatch = new DecalBatch(strategy);
 		spriteBatch2d = new SpriteBatch();
 		spriteBatch2d.enableBlending();
 
@@ -166,6 +170,15 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.update();
 		oCam.apply(gl);
 
+		// the floor grid...
+		gl.glPushMatrix();
+		gl.glColor4f(0, 1, 0, 1f);
+		floor.render(gl, GL10.GL_LINE_STRIP);
+		gl.glColor4f(1, 0, 0, 1f);
+		cube.render(gl, GL10.GL_LINE_STRIP);
+		gl.glPopMatrix();
+		
+		
 		for (DecalSprite oneWall : walls) {
 			decalBatch.add(oneWall.sprite);
 		}
@@ -188,12 +201,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		oCam.update();
 		oCam.apply(gl);
 
-		gl.glPushMatrix();
-		gl.glColor4f(0, 1, 0, 1f);
-		floor.render(gl, GL10.GL_LINE_STRIP);
-		gl.glColor4f(1, 0, 0, 1f);
-		cube.render(gl, GL10.GL_LINE_STRIP);
-		gl.glPopMatrix();
 
 		drawClouds(gl, delta);
 
