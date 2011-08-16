@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
+import com.badlogic.gdx.math.Vector3;
 
 public class DecalSprite{
 
@@ -35,9 +36,10 @@ public class DecalSprite{
 		return this;
 	}
 
-	//TODO
 	public void faceCamera(Camera oCam) {
-		// sprite.direction.set(x, y, z).sub(position).nor();
+		// having the decal lookAt the camera...
+		Vector3 dir = new Vector3(oCam.position.cpy().sub(sprite.getPosition()).nor());
+		sprite.setRotation(dir, oCam.up.cpy().nor());
 	}
 
 	public void update(float delta) {
