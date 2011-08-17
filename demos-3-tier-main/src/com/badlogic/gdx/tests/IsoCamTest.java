@@ -18,6 +18,7 @@ package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
@@ -32,7 +33,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.gdxuser.util.DemoWrapper;
 
-public class IsoCamTest extends DemoWrapper {
+public class IsoCamTest extends DemoWrapper implements InputProcessor{
+	InputMultiplexer inputMultiplexer;	
 	private static final int TARGET_WIDTH = 480;
 	private static final float UNIT_TO_PIXEL = TARGET_WIDTH * 0.15f;
 	Texture texture;
@@ -63,7 +65,9 @@ public class IsoCamTest extends DemoWrapper {
 
 		batch = new SpriteBatch();
 
-		Gdx.input.setInputProcessor(new IsoCamController(cam));
+		inputMultiplexer = new InputMultiplexer(Gdx.input.getInputProcessor());
+		inputMultiplexer.addProcessor(new IsoCamController(cam));
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
@@ -104,8 +108,9 @@ public class IsoCamTest extends DemoWrapper {
 		}
 	}
 
-//	public class IsoCamController extends InputAdapter {
-		public class IsoCamController implements InputProcessor{
+	// by extending InputAdapter you only have to implement
+	// those methods you are interested in and not all of them.
+	public class IsoCamController extends InputAdapter {
 		final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 		final Vector3 intersection = new Vector3();
 		final Vector3 curr = new Vector3();
@@ -129,42 +134,12 @@ public class IsoCamTest extends DemoWrapper {
 				camera.position.add(delta.x, 0, delta.z);
 			}
 			last.set(x, y, 0);
-			return false;
+			return true;
 		}
 
 		@Override
 		public boolean touchUp (int x, int y, int pointer, int button) {
 			last.set(-1, -1, -1);
-			return false;
-		}
-
-		@Override
-		public boolean keyDown(int keycode) {
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int keycode) {
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char character) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDown(int x, int y, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchMoved(int x, int y) {
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(int amount) {
 			return false;
 		}
 	}
