@@ -37,7 +37,7 @@ public class DemoWrapper implements ApplicationListener, InputProcessor {
 		case Keys.ESCAPE:
 			Gdx.app.exit();
 		}
-		return false;
+		return true;
 	}
 
 	public boolean keyTyped(char arg0) {
