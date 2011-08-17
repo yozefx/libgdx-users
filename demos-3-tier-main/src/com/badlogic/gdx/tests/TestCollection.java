@@ -26,7 +26,7 @@ import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
 public class TestCollection extends DemoWrapper implements InputProcessor {
-
+	private InputMultiplexer inputMultiplexer = new InputMultiplexer(this);
 	private final DemoWrapper[] tests = {
 			//TODO There is a test.p asset missing here...
 			// new ParticleEmitterTest(),
@@ -46,20 +46,22 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 
 	@Override
 	public void create() {
+
 		if (this.app == null) {
 			this.app = Gdx.app;
 			app.getInput().setCatchBackKey(true);
 			DemoWrapper test = tests[testIndex];
 			test.create();
+			inputMultiplexer.addProcessor(tests[testIndex]);
 		}
 
 		// TODO add IsoCamController here, too ?!
-		Gdx.input.setInputProcessor(new InputMultiplexer(this));
+		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if ((keycode == Keys.SPACE) || (keycode == Keys.MENU)) {
+		if ((keycode == Keys.SPACE) || (keycode == Keys.PERIOD) || (keycode == Keys.MENU)) {
 			app.log("TestCollection", "disposing test #" + testIndex + " '"
 					+ tests[testIndex].getClass().getName() + "'");
 			tests[testIndex].dispose();
@@ -84,7 +86,7 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 			tests[testIndex].keyDown(keycode);
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
