@@ -22,6 +22,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.gdxuser.demos.DecalWall;
+import com.gdxuser.demos.ModelViewer;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
@@ -31,10 +32,11 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 			//TODO There is a test.p asset missing here...
 			// new ParticleEmitterTest(),
 			new DecalWall(),
+			new ModelViewer(),
 			new PhysicsTest(),
 			new DecalTest(),
 			new IsoCamTest()};
-
+	
 	private int testIndex = 0;
 
 	private Application app = null;
