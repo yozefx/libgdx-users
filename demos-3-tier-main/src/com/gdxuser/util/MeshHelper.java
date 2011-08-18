@@ -83,4 +83,13 @@ public class MeshHelper {
 		return this;
 	}
 
+	public void rotateX(GL10 gl, float angle)
+	{
+		//TODO: does not work work like this!
+		gl.glPushMatrix();
+		gl.glColor4f(color.x, color.y, color.z, 1);
+		gl.glRotatef(angle, 1, 0, 0);
+		mesh.render(GL10.GL_LINE_STRIP);
+		gl.glPopMatrix();		
+	}
 }
