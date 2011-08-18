@@ -10,7 +10,7 @@ public class DemoWrapper implements ApplicationListener, InputProcessor {
 	@Override
 	public void create() {
 	}
-
+	
 	@Override
 	public void resume() {
 	}
@@ -33,6 +33,8 @@ public class DemoWrapper implements ApplicationListener, InputProcessor {
 	}
 
 	public boolean keyDown(int keyCode) {
+		Log.out("DemoWrapper handling keyInput...");
+		
 		switch (keyCode) {
 		case Keys.ESCAPE:
 			Gdx.app.exit();
@@ -72,5 +74,4 @@ public class DemoWrapper implements ApplicationListener, InputProcessor {
 	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
 		return false;
 	}
-
 }
