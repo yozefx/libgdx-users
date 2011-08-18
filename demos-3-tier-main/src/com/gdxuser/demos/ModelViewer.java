@@ -21,7 +21,9 @@ import com.gdxuser.util.Log;
 import com.gdxuser.util.MeshHelper;
 
 public class ModelViewer extends DemoWrapper implements InputProcessor {
+
 	private static final Vector2 FIELD_SIZE = new Vector2(10, 10);
+	static float amt;
 	float w;
 	float h;
 	private GuOrthoCam cam;
@@ -35,11 +37,11 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
-	
+
 	// for model movement
-	Vector3 currentModelPosition;
-	Vector3 newModelPosition;
-	
+	Vector3 currentModelPosition = new Vector3();
+	Vector3 newModelPosition = new Vector3();
+
 	@Override
 	public void create() {
 		GL10 gl = Gdx.gl10;
@@ -50,28 +52,27 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 		h = Gdx.graphics.getHeight();
 
 		cam = new GuOrthoCam(w, h, FIELD_SIZE);
-		cam.setTargetVec(FIELD_SIZE.x/2, 0, FIELD_SIZE.y/2);
+		cam.setTargetVec(FIELD_SIZE.x / 2, 0, FIELD_SIZE.y / 2);
 
 		// put some basic furniture in
 		floor = new FloorGrid(FIELD_SIZE);
 		floor.setColor(0, 1, 0);
 
 		mesh = new MeshHelper("data/3d/plane_tris.obj");
-		//mesh.setPos(FIELD_SIZE.x/2, 0, FIELD_SIZE.y/2);
-		mesh.setPos(1,1,1);
+		// mesh.setPos(FIELD_SIZE.x/2, 0, FIELD_SIZE.y/2);
+		mesh.setPos(1, 1, 1);
 		currentModelPosition = mesh.getPos();
 
 		// load a 1x1x1 cube for reference
 		cube = new Cube();
-		cube.scale(0.5f).setPos(0f, 0.5f, 0f).setColor(1,0,0);
-
-		Gdx.input.setInputProcessor(this);
+		cube.scale(0.5f).setPos(0f, 0.5f, 0f).setColor(1, 0, 0);
 	}
 
 	@Override
 	public void render() {
+		amt = 40 * Gdx.graphics.getDeltaTime();
 		GL10 gl = Gdx.app.getGraphics().getGL10();
-		gl.glClearColor(0.5f, 0.5f, 0.5f, 1);		
+		gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		cam.update();
@@ -80,67 +81,96 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 		cube.renderWireframe(gl);
 
 		gl.glColor4f(0, 0, 0.5f, 0);
-//		mesh.render(gl, GL10.GL_AMBIENT_AND_DIFFUSE);
+		// mesh.render(gl, GL10.GL_AMBIENT_AND_DIFFUSE);
 		mesh.render(gl, GL10.GL_TRIANGLES);
-		
+
 		currentModelPosition = mesh.getPos();
-		cam.handleKeys();
+		// cam.handleKeys();
 		cam.update();
 	}
 
+	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		Log.out("touched:" + x + ", " + y);
-		return false;
+		return true;
 	}
-	
-	public void moveUp(){}
-	public void moveDown(){}
 
-	public void moveLeft(){}
-	public void moveRight(){}
+	public void moveUp() {
+		newModelPosition.set(currentModelPosition.x, currentModelPosition.y
+				+ amt, currentModelPosition.z);
+		mesh.setPos(newModelPosition);
+	}
 
-	public void turnLeft(){}
-	public void turnRight(){}
+	public void moveDown() {
+		newModelPosition.set(currentModelPosition.x, currentModelPosition.y
+				- amt, currentModelPosition.z);
+		mesh.setPos(newModelPosition);
+	}
+
+	public void moveLeft() {
+		// todo add a direction vector to plane...
+		newModelPosition.set(currentModelPosition.x - amt,
+				currentModelPosition.y, currentModelPosition.z);
+		mesh.setPos(newModelPosition);
+	}
+
+	public void moveRight() {
+		// todo add a direction vector to plane...
+		newModelPosition.set(currentModelPosition.x + amt,
+				currentModelPosition.y, currentModelPosition.z);
+		mesh.setPos(newModelPosition);
+	}
+
+	public void turnLeft() {
+		mesh.rotateX(Gdx.gl10, -25);
+	}
+
+	public void turnRight() {
+		mesh.rotateX(Gdx.gl10, 25);
+	}
 
 	@Override
 	public boolean keyDown(int keyCode) {
+		Log.out("ModelViewer handling keyInput...");
+
 		switch (keyCode) {
 
 		// keys for moving the model up and down
 		case Keys.U:
 			Log.out("touched:" + "U");
-//			newModelPosition.set(currentModelPosition.x, currentModelPosition.y+0.01f, currentModelPosition.z);
-//			mesh.setPos(newModelPosition);
-			break;
+			moveUp();
+			return true;
 		case Keys.J:
-			newModelPosition.set(currentModelPosition.x, currentModelPosition.y-0.01f, currentModelPosition.z);
-			mesh.setPos(newModelPosition);
-			break;
+			moveDown();
+			return true;
 
-		// keys for moving the model left and right
-		case Keys.NUM_4:
-			break;
-		case Keys.NUM_6:
-			break;
+			// keys for moving the model left and right
+		case Keys.H:
+			moveLeft();
+			return true;
+		case Keys.K:
+			moveRight();
+			return true;
 
-		// keys for turning the model left and right
-		case Keys.NUM_7:
-			break;
-		case Keys.NUM_9:
-			break;
-			
+			// keys for turning the model left and right
+		case Keys.Z:
+			turnLeft();
+			return true;
+		case Keys.I:
+			turnRight();
+			return true;
+
 		case Keys.SPACE:
-			return false;
+			break;
 		}
-		return (super.keyDown(keyCode));
-//		return true;
+		return false;
 	}
 
 	@Override
-	public boolean touchDragged (int x, int y, int pointer) {
+	public boolean touchDragged(int x, int y, int pointer) {
 		Ray pickRay = cam.getPickRay(x, y);
 		Intersector.intersectRayPlane(pickRay, xzPlane, curr);
-		
+
 		if (!(last.x == -1 && last.y == -1 && last.z == -1)) {
 			pickRay = cam.getPickRay(last.x, last.y);
 			Intersector.intersectRayPlane(pickRay, xzPlane, delta);
@@ -152,9 +182,33 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 	}
 
 	@Override
-	public boolean touchUp (int x, int y, int pointer, int button) {
+	public boolean touchUp(int x, int y, int pointer, int button) {
 		last.set(-1, -1, -1);
 		return true;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchMoved(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
