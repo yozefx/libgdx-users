@@ -18,7 +18,6 @@ package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
@@ -34,7 +33,6 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.gdxuser.util.DemoWrapper;
 
 public class IsoCamTest extends DemoWrapper implements InputProcessor{
-	InputMultiplexer inputMultiplexer;	
 	private static final int TARGET_WIDTH = 480;
 	private static final float UNIT_TO_PIXEL = TARGET_WIDTH * 0.15f;
 	Texture texture;
@@ -42,7 +40,7 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 	SpriteBatch batch;
 	final Sprite[][] sprites = new Sprite[10][10];
 	final Matrix4 matrix = new Matrix4();
-
+	
 	@Override
 	public void create () {
 		texture = new Texture(Gdx.files.internal("data/badlogicsmall.jpg"));
@@ -64,10 +62,8 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 		}
 
 		batch = new SpriteBatch();
-
-		inputMultiplexer = new InputMultiplexer(Gdx.input.getInputProcessor());
-		inputMultiplexer.addProcessor(new IsoCamController(cam));
-		Gdx.input.setInputProcessor(inputMultiplexer);
+		
+		Gdx.input.setInputProcessor(new IsoCamController(cam));
 	}
 
 	@Override
