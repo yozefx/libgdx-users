@@ -63,6 +63,7 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 
 		batch = new SpriteBatch();
 		
+		// didn't manage to add this one to InputMultiplexer - no clue why...
 		Gdx.input.setInputProcessor(new IsoCamController(cam));
 	}
 
