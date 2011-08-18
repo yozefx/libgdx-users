@@ -17,6 +17,7 @@
 package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
@@ -26,7 +27,8 @@ import com.gdxuser.demos.ModelViewer;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
-public class TestCollection extends DemoWrapper implements InputProcessor {
+
+public class TestCollection implements ApplicationListener, InputProcessor {
 	private InputMultiplexer inputMultiplexer = new InputMultiplexer(this);
 	private final DemoWrapper[] tests = {
 			//TODO There is a test.p asset missing here...
@@ -56,13 +58,12 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 			test.create();
 			inputMultiplexer.addProcessor(tests[testIndex]);
 		}
-
-		// TODO add IsoCamController here, too ?!
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
+		Log.out("TestCollection handling keyInput...");
 		if ((keycode == Keys.SPACE) || (keycode == Keys.PERIOD) || (keycode == Keys.MENU)) {
 			app.log("TestCollection", "disposing test #" + testIndex + " '"
 					+ tests[testIndex].getClass().getName() + "'");
@@ -75,54 +76,56 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 			test.create();
 			app.log("TestCollection", "created test #" + testIndex + " '"
 					+ tests[testIndex].getClass().getName() + "'");
-		} else if (keycode == Keys.BACK) {
+			return true;
+		} else if ( (keycode == Keys.BACK) || (keycode == Keys.COMMA) ){
+			// clean up old test
+			inputMultiplexer.removeProcessor(tests[testIndex]);
+			this.tests[testIndex].dispose();
+			
 			testIndex--;
 			if (testIndex <0) {
 				Gdx.app.exit();
 			}
+
+			// set up new test
 			DemoWrapper test = tests[testIndex];
 			test.create();
+			inputMultiplexer.addProcessor(tests[testIndex]);
 			app.log("TestCollection", "created test #" + testIndex + " '"
 					+ tests[testIndex].getClass().getName() + "'");
+			return true;
 		} else {
 			tests[testIndex].keyDown(keycode);
 		}
-
 		return false;
 	}
 
 	@Override
 	public boolean keyTyped(char character) {
-		tests[testIndex].keyTyped(character);
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		tests[testIndex].keyUp(keycode);
 		return false;
 	}
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		tests[testIndex].touchDown(x, y, pointer, button);
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		tests[testIndex].touchDragged(x, y, pointer);
-		Log.out("touchDragged in TestCollection");
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		tests[testIndex].touchUp(x, y, pointer, button);
 		return false;
 	}
 
-	@Override
+	// TODO: removed @Override notation... maybe not correct?
 	public boolean needsGL20() {
 		return false;
 	}
@@ -135,5 +138,29 @@ public class TestCollection extends DemoWrapper implements InputProcessor {
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 }
