@@ -1,32 +1,24 @@
 package com.gdxuser.demos;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.actors.Image;
 import com.gdxuser.util.Billboard;
 import com.gdxuser.util.Cube;
 import com.gdxuser.util.DecalSprite;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.FloorGrid;
 import com.gdxuser.util.GuOrthoCam;
-//import com.gdxuser.util.ImageSprite;
 import com.gdxuser.util.Log;
-import com.gdxuser.util.MeshHelper;
 
 public class DecalWall extends DemoWrapper implements InputProcessor {
 	private static final Vector2 fieldSize = new Vector2(10, 10);
@@ -38,16 +30,15 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	private DecalBatch decalBatch;
 	private SpriteBatch spriteBatch2d;
 	private Billboard player;
-	private MeshHelper floorMesh;
 	private Billboard cloud;
-	private Texture cloudTex;
 	private Vector3 ppos;
 	private int ctr = 0;
 	private GroupStrategy strategy;
 	// private DecalSprite[] walls = new DecalSprite[5];
 	private DecalSprite wall;
-	private ArrayList<DecalSprite> walls = new ArrayList();
-	private ArrayList<DecalSprite> badges = new ArrayList();
+	private ArrayList<DecalSprite> walls = new ArrayList<DecalSprite>();
+	private ArrayList<DecalSprite> badges = new ArrayList<DecalSprite>();
+
 
 	@Override
 	public void create() {
@@ -140,8 +131,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		decalBatch = new DecalBatch(strategy);
 		spriteBatch2d = new SpriteBatch();
 		spriteBatch2d.enableBlending();
-
-		Gdx.input.setInputProcessor(this);
 	}
 
 	private ArrayList<DecalSprite> getBadges() {
@@ -233,9 +222,9 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		gl.glPopMatrix();
 	}
 
-	private void overlay(GL10 gl) {
-
-	}
+//	private void overlay(GL10 gl) {
+//
+//	}
 
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		Log.out("touched:" + x + y);
