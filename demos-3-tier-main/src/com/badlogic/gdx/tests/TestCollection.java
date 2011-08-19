@@ -38,6 +38,7 @@ public class TestCollection implements ApplicationListener, InputProcessor {
 			new ModelViewer(),
 			new PhysicsTest(),
 			new DecalTest(),
+			new HelloWorld(),
 			new QuadRenderTest(),
 			new IsoCamTest()};
 	
