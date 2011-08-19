@@ -24,6 +24,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.gdxuser.demos.DecalWall;
 import com.gdxuser.demos.ModelViewer;
+import com.gdxuser.demos.QuadRenderTest;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
@@ -37,6 +38,7 @@ public class TestCollection implements ApplicationListener, InputProcessor {
 			new ModelViewer(),
 			new PhysicsTest(),
 			new DecalTest(),
+			new QuadRenderTest(),
 			new IsoCamTest()};
 	
 	private int testIndex = 0;
