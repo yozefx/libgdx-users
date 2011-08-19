@@ -2,6 +2,7 @@ package com.gdxuser.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,8 +37,10 @@ public class DecalSprite{
 		return this;
 	}
 
+	// This method has become obsolete as of implementation in libGDX
+	// having the decal lookAt the camera...
 	public void faceCamera(Camera oCam) {
-		// having the decal lookAt the camera...
+		//TODO: change to according libGDX signature/method call
 		Vector3 dir = new Vector3(oCam.position.cpy().sub(sprite.getPosition()).nor());
 		sprite.setRotation(dir, oCam.up.cpy().nor());
 	}
