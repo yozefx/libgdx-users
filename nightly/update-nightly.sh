@@ -1,50 +1,56 @@
 #!/bin/sh
 
-# script to update nightlies from:
-# http://libgdx.l33tlabs.org/
+#author radioking and yatayata from libgdx-users project
+# script to update nightlies from: http://libgdx.l33tlabs.org/
 # make sure to .gitignore nightly/ dir
 
-set -x
+#set -x # Print command traces before executing command.
+set +x # Stop printing command traces before executing command.
 
-# YESTERDAY=`TZ=aaa24 date +%Y%m%d`
-
-STAMP=$(date -u +%Y%m%d)
-# STAMP="20110812"    # to hardwire cos of dateline
-# STAMP=$YESTERDAY
-
-echo "getting nightly: $STAMP"
-
+echo "creating temporary folder..."
 mkdir libs
-rm -rf libs/*
-
-curl http://libgdx.l33tlabs.org/libgdx-nightly-$STAMP.zip > libs/nightly.zip
-
 cd libs
-unzip nightly.zip
-rm nightly.zip
+
+NIGHTLIES="libgdx-nightly-latest.zip"
+echo "getting nightly: $NIGHTLIES"
+curl http://libgdx.l33tlabs.org/$NIGHTLIES > $NIGHTLIES
+
+echo "extracting nightlies to temporary folder..."
+unzip $NIGHTLIES
+
+echo "cleaning up..."
+rm $NIGHTLIES
+
+echo "copying libs to project 3-tier setup..."
+DESKTOP="../../demos-3-tier-desktop/libs"
+ANDROID="../../demos-3-tier-android/libs"
+MAIN="../../demos-3-tier-main/libs"
+
+
+# copy libs for android target
+echo "...android target..."
+cp -r armeabi                         $ANDROID
+cp -r armeabi-v7a                     $ANDROID
+cp    gdx-backend-android.jar         $ANDROID
+cp    gdx-backend-android-sources.jar $ANDROID
+# Not sure if this one is needed- read Android SDK
+# having a bug exporting it from main project.
+# bottomline was that it is needed?!
+#cp    libs/gdx.jar                         $ANDROID/libs
+
+
+# copy libs for desktop target
+echo "...desktop target..."
+cp gdx-backend-lwjgl-natives.jar $DESKTOP
+cp gdx-backend-lwjgl.jar         $DESKTOP
+cp gdx-natives.jar               $DESKTOP
+
+
+# copy libs for main target
+echo "...main target..."
+cp gdx-sources.jar $MAIN
+cp gdx.jar         $MAIN
 
 cd ..
-
-echo "copying..."
-
-desktop="../demos-desktop"
-android="../demos-android"
-
-# shared libs
-cp -r libs/* ../gdx-shared-libs/libs
-
-# setup desktop
-cp -r libs/* $desktop/libs
-rm -rf $desktop/libs/docs
-# delete superfluous libs for desktop target
-rm -rf $desktop/libs/armeabi
-rm -rf $desktop/libs/armeabi-v7a
-rm -rf $desktop/libs/gdx-backend-android.jar
-rm -rf $desktop/libs/gdx-backend-android-sources.jar
-
-# setup android - fewer files needed
-cp -r libs/armeabi $android/libs
-cp -r libs/armeabi-v7a $android/libs
-cp   libs/gdx.jar $android/libs
-cp   libs/gdx-backend-android.jar $android/libs
-
+echo "...all done. Don't forget to refresh all projects in Eclipse."
+echo "Happy coding =)!"
