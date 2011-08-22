@@ -1,8 +1,8 @@
 package com.gdxuser;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.tests.Box2DTest;
+import com.badlogic.gdx.tests.HelloWorld;
 import com.badlogic.gdx.tests.IsoCamTest;
 import com.badlogic.gdx.tests.PhysicsTest;
 import com.badlogic.gdx.tests.TestCollection;
@@ -10,7 +10,6 @@ import com.gdxuser.demos.DecalWall;
 import com.gdxuser.demos.ModelViewer;
 import com.gdxuser.demos.QuadRenderTest;
 import com.gdxuser.demos.SimpleTest;
-import com.gdxuser.util.DemoWrapper;
 
 public class DemoWrapperDesktop {
 
