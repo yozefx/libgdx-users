@@ -1,7 +1,7 @@
 # Blender v2.58 (sub 1) OBJ File: 'plane.blend'
 # www.blender.org
 mtllib plane.mtl
-o Cube_Cube.001
+o plane
 v 0.804187 -0.078625 -0.192973
 v 0.804187 -0.078625 0.200150
 v -0.768305 -0.078625 0.200150
