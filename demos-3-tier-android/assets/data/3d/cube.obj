@@ -1,6 +1,6 @@
 # Exported from Wings 3D 1.3.0.1
 mtllib cube.mtl
-o cube1
+o my_awesome_cube
 #8 vertices, 12 faces
 v -1.00000000 -1.00000000 1.00000000
 v -1.00000000 1.00000000 1.00000000
