@@ -41,7 +41,12 @@ public class MeshHelper {
 		mesh.scale(sc, sc, sc);
 		return this;
 	}
-	
+
+	public MeshHelper scale(float sx, float sy, float sz) {
+		mesh.scale(sx, sy, sz);
+		return this;
+	}
+
 	public void render(GL10 gl, int renderType) {
 		// Log.out("render at:", pos);
 		gl.glPushMatrix();

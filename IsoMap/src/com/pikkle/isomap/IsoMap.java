@@ -32,7 +32,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	FloorGrid floor;
 	private DecalBatch decalBatch;
 	private SpriteBatch spriteBatch2d;
-	private Billboard player;
+	private DecalSprite player;
 	private Billboard cloud;
 	private Vector3 ppos;
 	private int ctr = 0;
@@ -65,36 +65,47 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		// put some basic furniture in
 		floor = new FloorGrid(fieldSize);
 
-		plane = new MeshHelper("data/3d/floorplan.obj");
-		plane.setPos(3,2,3);
-		plane.setColor(1, 0, 0);
+		String objfile = "data/3d/plane.obj";
+		// String objfile = "data/3d/cube.obj";
+		plane = new MeshHelper(objfile);
+//		plane.scale(1,  1f, 5);
+		plane.setPos(5, 2f, 5);
+		plane.setColor(1, 1, 0);
 
 		cube = new Cube();
-		cube.scale(0.5f).setPos(0f, 0.5f, 0f).setColor(0, 1, 0);
+		cube.scale(0.5f).setPos(0.5f, 0.5f, 0.5f).setColor(0, 1, 0);
 
 		addWalls();
 		
-		// some stuff that should face the camera
-		badges = getBadges();
-		
-		player = Billboard.make("data/players/full/128/avatar1.png");
-		player.wpos(2, 0, 2);
-
-		// 2d cloud sprite
-		String imgPath = "data/icons/128/thunder.png";
-		cloud = Billboard.make(imgPath);
-		cloud.setMove(1f,0f,0f);
-		cloud.wpos(2f, 1f, 2f);
-
 		// batches
 		strategy = new CameraGroupStrategy(cam);		
 		decalBatch = new DecalBatch(strategy);
 		spriteBatch2d = new SpriteBatch();
 		spriteBatch2d.enableBlending();
-		
+
+		// some stuff that should face the camera
+		badges = addBadges();
+		addPlayer();	// after badges
 		addTiles();
-		
+
+		// 2d cloud sprite
+		String imgPath = "data/icons/128/thunder.png";
+		cloud = Billboard.make(imgPath);
+		cloud.setMove(0.5f,0f,0f);
+		cloud.wpos(2f, 1f, 2f);
+
+
 		Gdx.input.setInputProcessor(this);
+	}
+
+	private void addPlayer() {
+//		player = Billboard.make("data/players/full/128/avatar1.png");
+//		player.wpos(2, 0, 2);
+		
+		player = new DecalSprite().build("data/players/full/128/avatar1.png");
+		player.sprite.setDimensions(1, 1);
+		player.sprite.setPosition(5, 0.5f, 5);
+		badges.add(player);
 	}
 
 	private ArrayList<DecalSprite> addWalls() {
@@ -146,14 +157,14 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		return walls;
 	}
 
-	private ArrayList<DecalSprite> getBadges() {
+	private ArrayList<DecalSprite> addBadges() {
 		
 		for(int n=0; n<6; n++) {
 			DecalSprite badge = new DecalSprite().build("data/badges/128/badge" + n + ".png");
 			badge.sprite.setDimensions(1, 1);
 			float x = MathUtil.random(8) + 1;
 			float y = MathUtil.random(8) + 1;
-			badge.sprite.setPosition(x, 0.4f, y);
+			badge.sprite.setPosition(x, 0.55f, y);
 
 			// make the Badges always facing the camera
 			badge.faceCamera(cam);
@@ -200,6 +211,9 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		floor.render(gl, GL10.GL_LINE_STRIP);
 		gl.glColor4f(1, 0, 0, 1f);
 		cube.render(gl, GL10.GL_LINE_STRIP);
+		
+		gl.glColor4f(1, 1, 0, 1f);
+		plane.render(gl, GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();
 		
 		
@@ -218,20 +232,16 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		decalBatch.flush();
 
-//		cam.push();
-
 		cam.update();
 		cam.apply(gl);
 		// decalBatch.add(player.sprite);
 		decalBatch.flush();
 
-//		cam.pop();
 		cam.update();
 		cam.apply(gl);
 
 		drawClouds(gl, delta);
 		
-		plane.render(gl, GL10.GL_LINE_STRIP);
 
 		gl.glPopMatrix();
 		
@@ -244,8 +254,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cloud.project(cam);
 		cloud.update(delta);
 
-		player.project(cam);
-		player.update(delta);
+//		player.project(cam);
+//		player.update(delta);
 
 		if (ctr++ % 100 == 0) {
 			// Log.out("ppos: " + ppos + "  player:");
@@ -256,8 +266,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cloud.setPosition(cloud.spos.x, cloud.spos.y);
 		cloud.draw(spriteBatch2d, 0.8f);
 
-		player.setPosition(player.spos.x, player.spos.y);
-		player.draw(spriteBatch2d, 1);
+//		player.setPosition(player.spos.x, player.spos.y);
+//		player.draw(spriteBatch2d, 1);
 
 		spriteBatch2d.end();
 		gl.glPopMatrix();
