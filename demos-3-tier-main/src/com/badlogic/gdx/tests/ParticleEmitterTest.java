@@ -24,8 +24,9 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.gdxuser.util.DemoWrapper;
 
-public class ParticleEmitterTest extends GdxTest {
+public class ParticleEmitterTest extends DemoWrapper implements InputProcessor{
 	private SpriteBatch spriteBatch;
 	ParticleEffect effect;
 	int emitterIndex;
@@ -39,14 +40,14 @@ public class ParticleEmitterTest extends GdxTest {
 		spriteBatch = new SpriteBatch();
 
 		effect = new ParticleEffect();
-		//TODO - find this file!!!
 		effect.load(Gdx.files.internal("data/test.p"), Gdx.files.internal("data"));
 		effect.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		// Of course, a ParticleEffect is normally just used, without messing around with its emitters.
-		emitters = new Array(effect.getEmitters());
+		emitters = new Array<ParticleEmitter>(effect.getEmitters());
 		effect.getEmitters().clear();
 		effect.getEmitters().add(emitters.get(0));
 
+/* removed because input handling is taken care of by TestCollection	
 		inputProcessor = new InputProcessor() {
 			public boolean touchUp (int x, int y, int pointer, int button) {
 				return false;
@@ -72,9 +73,9 @@ public class ParticleEmitterTest extends GdxTest {
 
 			public boolean keyDown (int keycode) {
 				ParticleEmitter emitter = emitters.get(emitterIndex);
-				if (keycode == Input.Keys.DPAD_UP)
+				if( (keycode == Input.Keys.DPAD_UP) || (keycode == Input.Keys.PLUS) )
 					particleCount += 5;
-				else if (keycode == Input.Keys.DPAD_DOWN)
+				else if( (keycode == Input.Keys.DPAD_DOWN) || (keycode == Input.Keys.MINUS) )
 					particleCount -= 5;
 				else if (keycode == Input.Keys.SPACE) {
 					emitterIndex = (emitterIndex + 1) % emitters.size;
@@ -102,8 +103,60 @@ public class ParticleEmitterTest extends GdxTest {
 		};
 
 		Gdx.input.setInputProcessor(inputProcessor);
+ */
 	}
 
+	public boolean touchUp (int x, int y, int pointer, int button) {
+		return false;
+	}
+
+	public boolean touchDragged (int x, int y, int pointer) {
+		effect.setPosition(x, Gdx.graphics.getHeight() - y);
+		return false;
+	}
+
+	public boolean touchDown (int x, int y, int pointer, int newParam) {
+		effect.setPosition(x, Gdx.graphics.getHeight() - y);
+		return false;
+	}
+
+	public boolean keyUp (int keycode) {
+		return false;
+	}
+
+	public boolean keyTyped (char character) {
+		return false;
+	}
+
+	public boolean keyDown (int keycode) {
+		ParticleEmitter emitter = emitters.get(emitterIndex);
+		if( (keycode == Input.Keys.DPAD_UP) || (keycode == Input.Keys.PLUS) )
+			particleCount += 5;
+		else if( (keycode == Input.Keys.DPAD_DOWN) || (keycode == Input.Keys.MINUS) )
+			particleCount -= 5;
+		else if (keycode == Input.Keys.N) {
+			emitterIndex = (emitterIndex + 1) % emitters.size;
+			emitter = emitters.get(emitterIndex);
+			particleCount = (int)(emitter.getEmission().getHighMax() * emitter.getLife().getHighMax() / 1000f);
+		} else
+			return false;
+		particleCount = Math.max(0, particleCount);
+		if (particleCount > emitter.getMaxParticleCount()) emitter.setMaxParticleCount(particleCount * 2);
+		emitter.getEmission().setHigh(particleCount / emitter.getLife().getHighMax() * 1000);
+		effect.getEmitters().clear();
+		effect.getEmitters().add(emitter);
+		return false;
+	}
+
+	@Override
+	public boolean touchMoved (int x, int y) {
+		return false;
+	}
+
+	@Override
+	public boolean scrolled (int amount) {
+		return false;
+	}	
 	public void render () {
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		float delta = Gdx.graphics.getDeltaTime();
