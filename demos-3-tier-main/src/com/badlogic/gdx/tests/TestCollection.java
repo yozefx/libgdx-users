@@ -32,9 +32,8 @@ import com.gdxuser.util.Log;
 public class TestCollection implements ApplicationListener, InputProcessor {
 	private InputMultiplexer inputMultiplexer = new InputMultiplexer(this);
 	private final DemoWrapper[] tests = {
-			//TODO There is a test.p asset missing here...
-			// new ParticleEmitterTest(),
 			new DecalWall(),
+			new ParticleEmitterTest(),
 			new ModelViewer(),
 			new PhysicsTest(),
 			new DecalTest(),
