@@ -46,7 +46,7 @@ public class WrapperDesktop {
 //				"LibGDX users DemoWrapper Desktop: QuadRenderTest", 800, 600, false);
 
 		// This wraps all Tests, navigate through them with '.' and ','
-		new LwjglApplication(new IsoMap(), "TravelAgent", 800, 600, false);
+		new LwjglApplication(new IsoMap(), "TravelAgent", 800, 400, false);
 	}
 
 }

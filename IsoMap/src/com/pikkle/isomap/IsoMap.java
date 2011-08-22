@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
@@ -18,14 +19,15 @@ import com.gdxuser.util.DecalSprite;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.FloorGrid;
 import com.gdxuser.util.GuOrthoCam;
+import com.gdxuser.util.GuPerspCam;
 import com.gdxuser.util.Log;
 import com.gdxuser.util.MathUtil;
+import com.gdxuser.util.MeshHelper;
 
 public class IsoMap extends DemoWrapper implements InputProcessor {
 	private static final Vector2 fieldSize = new Vector2(10, 10);
 	float w;
 	float h;
-	private GuOrthoCam oCam;
 	private Cube cube;
 	FloorGrid floor;
 	private DecalBatch decalBatch;
@@ -40,7 +42,12 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private ArrayList<DecalSprite> walls = new ArrayList<DecalSprite>();
 	private ArrayList<DecalSprite> badges = new ArrayList<DecalSprite>();
 	private ArrayList<DecalSprite> tiles = new ArrayList<DecalSprite>();
-
+	private MeshHelper plane;
+	// camera
+	private Camera cam;
+	private GuOrthoCam oCam;
+	private GuPerspCam pCam;
+	private String camType = "ortho";
 
 	@Override
 	public void create() {
@@ -51,18 +58,46 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		h = Gdx.graphics.getHeight();
 
 		oCam = new GuOrthoCam(w, h, fieldSize);
-		// oCam.position.set(-GRID_SIZE, GRID_SIZE, GRID_SIZE * 2);
-		// oCam.lookAt(GRID_SIZE / 2, 0, GRID_SIZE / 2);
-		// oCam.lookAt(0, 0, 0);
+		pCam = new GuPerspCam(50, 50, 50);
+
+		cam = oCam;	// so we can switch
 
 		// put some basic furniture in
 		floor = new FloorGrid(fieldSize);
 
-		// floorMesh = new MeshHelper("data/3d/floorplan.obj");
+		plane = new MeshHelper("data/3d/floorplan.obj");
+		plane.setPos(3,2,3);
+		plane.setColor(1, 0, 0);
 
 		cube = new Cube();
 		cube.scale(0.5f).setPos(0f, 0.5f, 0f).setColor(0, 1, 0);
 
+		addWalls();
+		
+		// some stuff that should face the camera
+		badges = getBadges();
+		
+		player = Billboard.make("data/players/full/128/avatar1.png");
+		player.wpos(2, 0, 2);
+
+		// 2d cloud sprite
+		String imgPath = "data/icons/128/thunder.png";
+		cloud = Billboard.make(imgPath);
+		cloud.setMove(1f,0f,0f);
+		cloud.wpos(2f, 1f, 2f);
+
+		// batches
+		strategy = new CameraGroupStrategy(cam);		
+		decalBatch = new DecalBatch(strategy);
+		spriteBatch2d = new SpriteBatch();
+		spriteBatch2d.enableBlending();
+		
+		addTiles();
+		
+		Gdx.input.setInputProcessor(this);
+	}
+
+	private ArrayList<DecalSprite> addWalls() {
 		// decals for walls
 		wall = new DecalSprite().build("data/decals/256/blueflower.png");
 		wall.sprite.setDimensions(6, 6);
@@ -107,34 +142,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		wall.sprite.setPosition(fieldSize.x, 2, 6);
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
-
 		
-		// some stuff that should face the camera
-		badges = getBadges();
-		
-
-		// 2d player
-		// player = new
-		// DecalSprite().build("data/players/full/128/avatar1.png");
-		// player.sprite.setDimensions(4, 4);
-		// player.sprite.setPosition(4, 2, 2);
-
-		player = Billboard.make("data/players/full/128/avatar1.png");
-		player.wpos(2, 0, 2);
-
-		// 2d cloud sprite
-		String imgPath = "data/icons/128/thunder.png";
-		cloud = Billboard.make(imgPath);
-		cloud.setMove(1f,0f,0f);
-		cloud.wpos(2f, 1f, 2f);
-
-		// batches
-		strategy = new CameraGroupStrategy(oCam);		
-		decalBatch = new DecalBatch(strategy);
-		spriteBatch2d = new SpriteBatch();
-		spriteBatch2d.enableBlending();
-		
-		addTiles();
+		return walls;
 	}
 
 	private ArrayList<DecalSprite> getBadges() {
@@ -147,7 +156,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 			badge.sprite.setPosition(x, 0.4f, y);
 
 			// make the Badges always facing the camera
-			badge.faceCamera(oCam);
+			badge.faceCamera(cam);
 
 			badges.add(badge);
 		}
@@ -157,7 +166,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 	// builds floor into tiles array
 	private ArrayList<DecalSprite> addTiles() {
-		String[] tilenames = {"blue-mosaic", "grey-mosaic", "rusty-mosaic", "rusty"};
+		float offset = 0.5f;
+		String[] tilenames = {"blue-mosaic", "grey-mosaic", "rusty-mosaic", "rusty", "hex", "hex"};
 		for (int x=0; x<10; x++) {
 			for (int y=0; y<10; y++) {
 				String tilename = MathUtil.randomElem(tilenames);
@@ -165,7 +175,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 				DecalSprite tile = new DecalSprite().build("data/tiles/128/" + tilename + ".jpeg");
 				tile.sprite.setDimensions(1, 1);
 				tile.sprite.rotateX(90);
-				tile.sprite.setPosition(x, -0.01f, y);
+				tile.sprite.setPosition(x + offset, -0.01f, y + offset);
 				tiles.add(tile);				
 			}
 		}
@@ -181,8 +191,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		float delta = Gdx.graphics.getDeltaTime();
 
-		oCam.update();
-		oCam.apply(gl);
+		cam.update();
+		cam.apply(gl);
 
 		// the floor grid...
 		gl.glPushMatrix();
@@ -198,7 +208,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		}
 
 		for (DecalSprite oneBadge : badges) {
-			oneBadge.faceCamera(oCam);
+			oneBadge.faceCamera(cam);
 			decalBatch.add(oneBadge.sprite);
 		}
 
@@ -208,31 +218,33 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		decalBatch.flush();
 
-		oCam.push();
+//		cam.push();
 
-		oCam.update();
-		oCam.apply(gl);
+		cam.update();
+		cam.apply(gl);
 		// decalBatch.add(player.sprite);
 		decalBatch.flush();
 
-		oCam.pop();
-		oCam.update();
-		oCam.apply(gl);
-
+//		cam.pop();
+		cam.update();
+		cam.apply(gl);
 
 		drawClouds(gl, delta);
+		
+		plane.render(gl, GL10.GL_LINE_STRIP);
 
 		gl.glPopMatrix();
+		
 		oCam.handleKeys();
 
 	}
 
 	private void drawClouds(GL10 gl, float delta) {
 		gl.glPushMatrix();
-		cloud.project(oCam);
+		cloud.project(cam);
 		cloud.update(delta);
 
-		player.project(oCam);
+		player.project(cam);
 		player.update(delta);
 
 		if (ctr++ % 100 == 0) {
@@ -256,11 +268,42 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		return false;
 	}
 
+	//TODO - implement proper drag rotation
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) {
+		Log.out("dragged");
+		float delta = Gdx.graphics.getDeltaTime();
+		spinCam(delta);
+		return false;
+	}
+	
+	// FIXME - fix java too. ocam and pcam are subclasses of different types
+	// so cannot share the same behavior unless we could monkeypatch 
+	// the parent class of both camera is abstrac tho. >,<
+	// hence the ugly code below since polymorphism isnt real
+	// interfaces dont help either so need some much more complex pattern
+	// ruby modules + monkeypatch would fix this
+	private void spinCam(float delta) {
+		if (camType == "ortho") {
+			oCam.spin(delta);
+		} else {
+			pCam.spin(delta);
+		}
+	}
+
 	@Override
 	public boolean keyDown(int keyCode) {
 		switch (keyCode) {
 
 		case Keys.C:
+			if(camType  == "ortho") {
+				camType = "persp";
+				cam = pCam;
+			} else {
+				camType = "ortho";
+				cam = oCam;
+			}
+			Log.out("set cam to:" + camType);
 			break;
 
 		case Keys.SPACE:

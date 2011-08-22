@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
-public class GuOrthoCam extends OrthographicCamera implements InputProcessor{
+public class GuOrthoCam extends OrthographicCamera implements InputProcessor, GuCamera {
 
 	private static final float DEG = (float) (Math.PI / 180f);
 	private static final int CAMSPEED = 40;
@@ -44,14 +44,13 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor{
 	private static float relative_rotation_angle = 0;
 
 	// for InputProcessor methods
-//	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
+	// final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 	final Plane xzPlane = new Plane(new Vector3(0, 0, 1), 0);
 	final Vector3 intersection = new Vector3();
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
 
-	
 	public GuOrthoCam(float vpw, float vph, Vector2 field) {
 		// super method calls an update() so all better be ready in our update
 		super(field.x * VIEW_ZOOM, field.x * VIEW_ZOOM * (vph / vpw));
@@ -119,19 +118,19 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor{
 	public void handleKeys() {
 		float amt = CAMSPEED * Gdx.graphics.getDeltaTime();
 
-		if (Gdx.input.isKeyPressed(Keys.W)) {
+		if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
 			translate(direction.x, 0, direction.z);
 		}
-		if (Gdx.input.isKeyPressed(Keys.S)) {
+		if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
 			translate(-direction.x, 0, -direction.z);
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.A)) {
+		if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
 			Vector3 right = new Vector3(direction);
 			right.crs(up);
 			translate(-right.x, 0, -right.z);
 		}
-		if (Gdx.input.isKeyPressed(Keys.D)) {
+		if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			Vector3 right = new Vector3(direction);
 			right.crs(up);
 			translate(right.x, 0, right.z);
@@ -279,27 +278,27 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor{
 
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-//		if (Gdx.input.isKeyPressed(Keys.W)) {
-//			translate(direction.x, 0, direction.z);
-//		}
-//		if (Gdx.input.isKeyPressed(Keys.S)) {
-//			translate(-direction.x, 0, -direction.z);
-//		}
-//
-//		if (Gdx.input.isKeyPressed(Keys.A)) {
-//			Vector3 right = new Vector3(direction);
-//			right.crs(up);
-//			translate(-right.x, 0, -right.z);
-//		}
-//		if (Gdx.input.isKeyPressed(Keys.D)) {
-//			Vector3 right = new Vector3(direction);
-//			right.crs(up);
-//			translate(right.x, 0, right.z);
-//		}
-		//TODO: WIP, this does not work this way...
+		// if (Gdx.input.isKeyPressed(Keys.W)) {
+		// translate(direction.x, 0, direction.z);
+		// }
+		// if (Gdx.input.isKeyPressed(Keys.S)) {
+		// translate(-direction.x, 0, -direction.z);
+		// }
+		//
+		// if (Gdx.input.isKeyPressed(Keys.A)) {
+		// Vector3 right = new Vector3(direction);
+		// right.crs(up);
+		// translate(-right.x, 0, -right.z);
+		// }
+		// if (Gdx.input.isKeyPressed(Keys.D)) {
+		// Vector3 right = new Vector3(direction);
+		// right.crs(up);
+		// translate(right.x, 0, right.z);
+		// }
+		// TODO: WIP, this does not work this way...
 		Ray pickRay = this.getPickRay(x, y);
 		Intersector.intersectRayPlane(pickRay, xzPlane, curr);
-		
+
 		if (!(last.x == -1 && last.y == -1 && last.z == -1)) {
 			pickRay = this.getPickRay(last.x, last.y);
 			Intersector.intersectRayPlane(pickRay, xzPlane, delta);
@@ -307,7 +306,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor{
 			this.position.add(delta.x, 0, delta.z);
 		}
 		last.set(x, y, 0);
-		
+
 		return false;
 	}
 
@@ -321,6 +320,10 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor{
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void spin(float delta) {
+		Log.out("spin oCam");
 	}
 
 }

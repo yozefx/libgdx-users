@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
 	<classpathentry kind="lib" path="/demos-3-tier-main/libs/gdx.jar" sourcepath="/demos-3-tier-main/libs/gdx-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/demos-3-tier-main"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/IsoMap"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
