@@ -259,9 +259,17 @@ public class GuPerspCam extends PerspectiveCamera implements InputProcessor, GuC
 		return false;
 	}
 
+
 	@Override
-	public void spin(float delta) {
-		Log.out("spin oCam");
+	public void spin(float delta, float dir) {
+		// TODO Auto-generated method stub
+		Log.out("spin pCam");		
+	}
+
+	@Override
+	public void spin(float delta, Vector3 dir) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

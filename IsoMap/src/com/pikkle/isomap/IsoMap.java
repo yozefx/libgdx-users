@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.gdxuser.util.Billboard;
 import com.gdxuser.util.Cube;
 import com.gdxuser.util.DecalSprite;
@@ -26,8 +27,10 @@ import com.gdxuser.util.MeshHelper;
 
 public class IsoMap extends DemoWrapper implements InputProcessor {
 	private static final Vector2 fieldSize = new Vector2(10, 10);
-	float w;
-	float h;
+	private static final float TILESIZE = 2f;
+	private static final int NUMTILES = 5;
+	float screenWidth;
+	float screenHeight;
 	private Cube cube;
 	FloorGrid floor;
 	private DecalBatch decalBatch;
@@ -48,27 +51,31 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private GuOrthoCam oCam;
 	private GuPerspCam pCam;
 	private String camType = "ortho";
+	private boolean debugRender = false;
+	private Vector2 screenSize;
+	private Vector2 last = new Vector2(0,0);
 
 	@Override
 	public void create() {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
 
-		w = Gdx.graphics.getWidth();
-		h = Gdx.graphics.getHeight();
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+		screenSize = new Vector2(screenWidth, screenHeight);
 
-		oCam = new GuOrthoCam(w, h, fieldSize);
+		oCam = new GuOrthoCam(screenWidth, screenHeight, fieldSize);
 		pCam = new GuPerspCam(50, 50, 50);
 
-		cam = oCam;	// so we can switch
+		cam = oCam; // so we can switch
 
 		// put some basic furniture in
 		floor = new FloorGrid(fieldSize);
 
-		String objfile = "data/3d/plane.obj";
+		String objfile = "data/3d/plane_tris.obj";
 		// String objfile = "data/3d/cube.obj";
 		plane = new MeshHelper(objfile);
-//		plane.scale(1,  1f, 5);
+		// plane.scale(1, 1f, 5);
 		plane.setPos(5, 2f, 5);
 		plane.setColor(1, 1, 0);
 
@@ -76,32 +83,31 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cube.scale(0.5f).setPos(0.5f, 0.5f, 0.5f).setColor(0, 1, 0);
 
 		addWalls();
-		
+
 		// batches
-		strategy = new CameraGroupStrategy(cam);		
+		strategy = new CameraGroupStrategy(cam);
 		decalBatch = new DecalBatch(strategy);
 		spriteBatch2d = new SpriteBatch();
 		spriteBatch2d.enableBlending();
 
 		// some stuff that should face the camera
 		badges = addBadges();
-		addPlayer();	// after badges
+		addPlayer(); // after badges
 		addTiles();
 
 		// 2d cloud sprite
 		String imgPath = "data/icons/128/thunder.png";
 		cloud = Billboard.make(imgPath);
-		cloud.setMove(0.5f,0f,0f);
+		cloud.setMove(0.5f, 0f, 0f);
 		cloud.wpos(2f, 1f, 2f);
-
 
 		Gdx.input.setInputProcessor(this);
 	}
 
 	private void addPlayer() {
-//		player = Billboard.make("data/players/full/128/avatar1.png");
-//		player.wpos(2, 0, 2);
-		
+		// player = Billboard.make("data/players/full/128/avatar1.png");
+		// player.wpos(2, 0, 2);
+
 		player = new DecalSprite().build("data/players/full/128/avatar1.png");
 		player.sprite.setDimensions(1, 1);
 		player.sprite.setPosition(5, 0.5f, 5);
@@ -153,18 +159,22 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		wall.sprite.setPosition(fieldSize.x, 2, 6);
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
-		
+
 		return walls;
 	}
 
 	private ArrayList<DecalSprite> addBadges() {
-		
-		for(int n=0; n<6; n++) {
-			DecalSprite badge = new DecalSprite().build("data/badges/128/badge" + n + ".png");
+
+		for (int n = 0; n < 6; n++) {
+			DecalSprite badge = new DecalSprite().build("data/badges/128/badge"
+					+ n + ".png");
 			badge.sprite.setDimensions(1, 1);
 			float x = MathUtil.random(8) + 1;
 			float y = MathUtil.random(8) + 1;
-			badge.sprite.setPosition(x, 0.55f, y);
+			if (x==5 || y==5) {
+				continue;
+			}
+			badge.sprite.setPosition(x, 0.6f, y);
 
 			// make the Badges always facing the camera
 			badge.faceCamera(cam);
@@ -177,23 +187,25 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 	// builds floor into tiles array
 	private ArrayList<DecalSprite> addTiles() {
-		float offset = 0.5f;
-		String[] tilenames = {"blue-mosaic", "grey-mosaic", "rusty-mosaic", "rusty", "hex", "hex"};
-		for (int x=0; x<10; x++) {
-			for (int y=0; y<10; y++) {
+		float offset = 0.5f * TILESIZE;
+		String[] tilenames = { "blue-mosaic", "grey-mosaic", "rusty-mosaic",
+				"rusty", "hex", "hex" };
+		for (int x = 0; x < NUMTILES; x++) {
+			for (int y = 0; y < NUMTILES; y++) {
 				String tilename = MathUtil.randomElem(tilenames);
 
-				DecalSprite tile = new DecalSprite().build("data/tiles/128/" + tilename + ".jpeg");
-				tile.sprite.setDimensions(1, 1);
+				DecalSprite tile = new DecalSprite().build("data/tiles/128/"
+						+ tilename + ".jpeg");
+				tile.sprite.setDimensions(TILESIZE, TILESIZE);
 				tile.sprite.rotateX(90);
-				tile.sprite.setPosition(x + offset, -0.01f, y + offset);
-				tiles.add(tile);				
+				tile.sprite.setPosition(x * TILESIZE + offset, -0.01f, y
+						* TILESIZE + offset);
+				tiles.add(tile);
 			}
 		}
 		return tiles;
 	}
-	
-	
+
 	@Override
 	public void render() {
 		GL10 gl = Gdx.app.getGraphics().getGL10();
@@ -207,16 +219,19 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		// the floor grid...
 		gl.glPushMatrix();
-		gl.glColor4f(0, 1, 0, 1f);
-		floor.render(gl, GL10.GL_LINE_STRIP);
-		gl.glColor4f(1, 0, 0, 1f);
-		cube.render(gl, GL10.GL_LINE_STRIP);
-		
-		gl.glColor4f(1, 1, 0, 1f);
-		plane.render(gl, GL10.GL_LINE_STRIP);
+
+		if (debugRender) {
+			gl.glColor4f(0, 1, 0, 1f);
+			floor.render(gl, GL10.GL_LINE_STRIP);
+			gl.glColor4f(1, 0, 0, 1f);
+			cube.render(gl, GL10.GL_LINE_STRIP);
+
+			gl.glColor4f(1, 1, 0, 1f);
+			plane.render(gl, GL10.GL_LINE_STRIP);
+		}
+
 		gl.glPopMatrix();
-		
-		
+
 		for (DecalSprite oneWall : walls) {
 			decalBatch.add(oneWall.sprite);
 		}
@@ -241,10 +256,9 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cam.apply(gl);
 
 		drawClouds(gl, delta);
-		
 
 		gl.glPopMatrix();
-		
+
 		oCam.handleKeys();
 
 	}
@@ -254,59 +268,67 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cloud.project(cam);
 		cloud.update(delta);
 
-//		player.project(cam);
-//		player.update(delta);
-
 		if (ctr++ % 100 == 0) {
 			// Log.out("ppos: " + ppos + "  player:");
 			// Log.out("cld: " + cld);
 			// Log.out("player: " + player.sprite.getPosition() );
 		}
+
 		spriteBatch2d.begin();
 		cloud.setPosition(cloud.spos.x, cloud.spos.y);
 		cloud.draw(spriteBatch2d, 0.8f);
 
-//		player.setPosition(player.spos.x, player.spos.y);
-//		player.draw(spriteBatch2d, 1);
+		// player.setPosition(player.spos.x, player.spos.y);
+		// player.draw(spriteBatch2d, 1);
 
 		spriteBatch2d.end();
 		gl.glPopMatrix();
 	}
 
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		Log.out("touched:" + x + y);
+		Log.out("touched:" + x + ", " + y);
 		return false;
 	}
 
-	//TODO - implement proper drag rotation
+	// TODO - implement proper drag rotation
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		Log.out("dragged");
+		// Log.out("dragged:",x,y);
+		float dir; 
+		if (x<last.x) {
+			dir = 1;
+		} else {
+			dir = -1;
+		}
+		last.x = x;
 		float delta = Gdx.graphics.getDeltaTime();
-		spinCam(delta);
+		
+		spinCam(delta, dir);
 		return false;
 	}
-	
+
 	// FIXME - fix java too. ocam and pcam are subclasses of different types
-	// so cannot share the same behavior unless we could monkeypatch 
+	// so cannot share the same behavior unless we could monkeypatch
 	// the parent class of both camera is abstrac tho. >,<
 	// hence the ugly code below since polymorphism isnt real
 	// interfaces dont help either so need some much more complex pattern
 	// ruby modules + monkeypatch would fix this
-	private void spinCam(float delta) {
+	private void spinCam(float delta, float dir) {
 		if (camType == "ortho") {
-			oCam.spin(delta);
+			oCam.spin(delta, dir);
 		} else {
-			pCam.spin(delta);
+			pCam.spin(delta, dir);
 		}
 	}
 
 	@Override
 	public boolean keyDown(int keyCode) {
+		boolean f = false;
+
 		switch (keyCode) {
 
 		case Keys.C:
-			if(camType  == "ortho") {
+			if (camType == "ortho") {
 				camType = "persp";
 				cam = pCam;
 			} else {
@@ -314,12 +336,24 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 				cam = oCam;
 			}
 			Log.out("set cam to:" + camType);
+			f = true;
+			break;
+
+		case Keys.G:
+			debugRender = !debugRender;
+			f = true;
 			break;
 
 		case Keys.SPACE:
+			f = true;
 			break;
+
+		default:
+			Log.out("unknown key: super" + keyCode);
+			return (super.keyDown(keyCode));
 		}
-		return (super.keyDown(keyCode));
+
+		return f;
 	}
 
 }
