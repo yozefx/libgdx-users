@@ -12,7 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
-public class GuOrthoCam extends OrthographicCamera implements InputProcessor, GuCamera {
+public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
+		GuCamera {
 
 	private static final float DEG = (float) (Math.PI / 180f);
 	private static final int CAMSPEED = 40;
@@ -126,14 +127,11 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor, Gu
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
-			Vector3 right = new Vector3(direction);
-			right.crs(up);
-			translate(-right.x, 0, -right.z);
+			goLeft();
 		}
-		if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			Vector3 right = new Vector3(direction);
-			right.crs(up);
-			translate(right.x, 0, right.z);
+		if (Gdx.input.isKeyPressed(Keys.D)
+				|| Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			goRight();
 		}
 		if (Gdx.input.isKeyPressed(Keys.E)) {
 			rotate(-amt, 0, 1, 0);
@@ -200,6 +198,18 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor, Gu
 		}
 
 		update();
+	}
+
+	private void goRight() {
+		Vector3 right = new Vector3(direction);
+		right.crs(up);
+		translate(right.x, 0, right.z);
+	}
+
+	private void goLeft() {
+		Vector3 right = new Vector3(direction);
+		right.crs(up);
+		translate(-right.x, 0, -right.z);
 	}
 
 	private void printInfo() {
@@ -322,8 +332,19 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor, Gu
 		return false;
 	}
 
-	public void spin(float delta) {
-		Log.out("spin oCam");
+	public void spin(float delta, float dir) {
+		if (dir < 0) {
+			goLeft();
+		} else {
+			goRight();
+		}
+		// Log.out("spin oCam");
+	}
+
+	@Override
+	public void spin(float delta, Vector3 dir) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
