@@ -8,8 +8,10 @@
 set +x # Stop printing command traces before executing command.
 
 echo "creating temporary folder..."
-mkdir libs
-cd libs
+TMPLIBDIR="libs_tmp"
+
+mkdir $TMPLIBDIR
+cd $TMPLIBDIR
 
 NIGHTLIES="libgdx-nightly-latest.zip"
 echo "getting nightly: $NIGHTLIES"
@@ -17,9 +19,6 @@ curl http://libgdx.l33tlabs.org/$NIGHTLIES > $NIGHTLIES
 
 echo "extracting nightlies to temporary folder..."
 unzip $NIGHTLIES
-
-echo "cleaning up..."
-rm $NIGHTLIES
 
 echo "copying libs to project 3-tier setup..."
 DESKTOP="../../demos-3-tier-desktop/libs"
@@ -51,6 +50,9 @@ echo "...main target..."
 cp gdx-sources.jar $MAIN
 cp gdx.jar         $MAIN
 
+echo "cleaning up..."
 cd ..
+rm -rf $TMPLIBDIR
+
 echo "...all done. Don't forget to refresh all projects in Eclipse."
 echo "Happy coding =)!"
