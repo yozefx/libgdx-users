@@ -17,6 +17,7 @@
 package com.wiztoybox.examplelauncher;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -25,32 +26,17 @@ public class ExampleActivity extends AndroidApplication {
 
 	public void onCreate (Bundle bundle) {
 		super.onCreate(bundle);
+		setContentView(R.layout.example_launcher);		
 
 		Bundle extras = getIntent().getExtras();
 		String exampleName = (String)extras.get("Example");
-		Example example = newExample(exampleName);
+		Log.i("ExampleName: ", exampleName);
+		Example example = Example.newExample(exampleName);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useGL20 = example.needsGL20();
 		config.numSamples = 2;
 		initialize(example, config);
 	}
 	
-	public static Example newExample(String exampleName)
-	{
-		try {
-			Class exampleClass = Class.forName("com.wiztoybox.examplelauncher.examples." + exampleName);
-			return (Example)exampleClass.newInstance();
-		} catch (Exception ex) {
-//TODO: This is not needed if all tests reside in examples folder...			
-//			try {
-//				Class exampleClass = Class.forName("com.wiztoybox.examplelauncher.examples." + exampleName);
-//				return (Example)exampleClass.newInstance();
-//			} catch (Exception e) {
-//				ex.printStackTrace();
-//				return null;
-//			}
-			ex.printStackTrace();
-			return null;
-		}
-	}
+
 }
