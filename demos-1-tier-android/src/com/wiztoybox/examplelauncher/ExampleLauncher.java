@@ -8,16 +8,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.wiztoybox.examplelauncher.examples.ColoredBackground;
-import com.wiztoybox.examplelauncher.examples.ColoredLines;
-import com.wiztoybox.examplelauncher.examples.ColoredSquares;
-import com.wiztoybox.examplelauncher.examples.MovingSprites;
+import com.wiztoybox.examplelauncher.examples.*;
 
 public class ExampleLauncher extends ListActivity {
 
 	static String[] strings;
 
-	private Demo[] demos = {
+	public static final Demo[] demos = {
 			// Add another line for each new demo.
 			// Parameters: Title, class [, orientation]
 			new Demo("Colored Background", ColoredBackground.class),
@@ -29,6 +26,7 @@ public class ExampleLauncher extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.example_launcher);		
 
 		strings = new String[demos.length];
 		for (int i = 0; i < demos.length; i++) {
