@@ -29,8 +29,9 @@
 package com.wiztoybox.examplelauncher;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.backends.android.AndroidApplication;
 
-public abstract class Example implements ApplicationListener {
+public abstract class Example extends AndroidApplication implements ApplicationListener {
 	public abstract boolean needsGL20 ();
 
 	public void create () {
@@ -50,4 +51,23 @@ public abstract class Example implements ApplicationListener {
 
 	public void dispose () {
 	};
+
+	public static Example newExample(String exampleName)
+	{
+		try {
+			Class exampleClass = Class.forName("com.wiztoybox.examplelauncher.examples." + exampleName);
+			return (Example)exampleClass.newInstance();
+		} catch (Exception ex) {
+//TODO: This is not needed if all tests reside in examples folder...			
+//			try {
+//				Class exampleClass = Class.forName("com.wiztoybox.examplelauncher.examples." + exampleName);
+//				return (Example)exampleClass.newInstance();
+//			} catch (Exception e) {
+//				ex.printStackTrace();
+//				return null;
+//			}
+			ex.printStackTrace();
+			return null;
+		}
+	}	
 }
