@@ -29,11 +29,10 @@ public class ExampleLauncher extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.example_launcher);
 
 		strings = new String[demos.length];
 		for (int i = 0; i < demos.length; i++) {
-			strings[i] = demos[i].title;
+			strings[i] = demos[i].classname.getSimpleName();
 		}
 
 		setListAdapter(new ArrayAdapter<String>(this,
@@ -41,10 +40,17 @@ public class ExampleLauncher extends ListActivity {
 	}
 
 	@Override
-	public void onListItemClick(ListView parent, View v, int position, long id) {
-		Intent intent = new Intent(this, demos[position].classname);
-// TODO: both do not work yet
-//		this.startService(intent);
-		this.startActivity(intent);
+	protected void onListItemClick(ListView parent, View v, int position, long id) {
+		super.onListItemClick(parent, v, position, id);
+
+		Object o = this.getListAdapter().getItem(position);
+		String exampleName = o.toString();
+
+		Bundle bundle = new Bundle();
+		bundle.putString("Example", exampleName);
+		Intent intent = new Intent(this, ExampleActivity.class);
+		intent.putExtras(bundle);
+
+		startActivity(intent);
 	}
 }
