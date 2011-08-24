@@ -4,8 +4,10 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.graphics.GL10;
+import com.wiztoybox.examplelauncher.Example;
 
-public class ColoredBackground extends AndroidApplication implements ApplicationListener{
+//public class ColoredBackground extends AndroidApplication implements ApplicationListener{
+	public class ColoredBackground extends Example{
 
 	@Override
 	public void resume() {
@@ -103,6 +105,12 @@ public class ColoredBackground extends AndroidApplication implements Application
 	private void draw(float deltaTime) {
         Gdx.gl.glClearColor(red, green, blue, 1);
 		Gdx.graphics.getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
+	}
+
+	@Override
+	public boolean needsGL20() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
