@@ -28,11 +28,11 @@ import com.gdxuser.demos.QuadRenderTest;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
-
 public class TestCollection implements ApplicationListener, InputProcessor {
 	private InputMultiplexer inputMultiplexer = new InputMultiplexer(this);
 	private final DemoWrapper[] tests = {
 			new DecalWall(),
+			new StageTest(),
 			new ParticleEmitterTest(),
 			new ModelViewer(),
 			new PhysicsTest(),
