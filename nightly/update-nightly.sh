@@ -20,35 +20,53 @@ curl http://libgdx.l33tlabs.org/$NIGHTLIES > $NIGHTLIES
 echo "extracting nightlies to temporary folder..."
 unzip $NIGHTLIES
 
+#########################################################
+
+echo "copying libs to project 1-tier setup..."
+ANDROID1="../../demos-1-tier-android/libs"
+
+# copy libs for android target
+echo "...android target..."
+cp -r armeabi                         $ANDROID1
+cp -r armeabi-v7a                     $ANDROID1
+cp    gdx-backend-android.jar         $ANDROID1
+cp    gdx-backend-android-sources.jar $ANDROID1
+cp    gdx-sources.jar			$ANDROID1
+cp    gdx.jar				$ANDROID1
+
+#########################################################
+
 echo "copying libs to project 3-tier setup..."
-DESKTOP="../../demos-3-tier-desktop/libs"
-ANDROID="../../demos-3-tier-android/libs"
-MAIN="../../demos-3-tier-main/libs"
+DESKTOP3="../../demos-3-tier-desktop/libs"
+ANDROID3="../../demos-3-tier-android/libs"
+MAIN3="../../demos-3-tier-main/libs"
 
 
 # copy libs for android target
 echo "...android target..."
-cp -r armeabi                         $ANDROID
-cp -r armeabi-v7a                     $ANDROID
-cp    gdx-backend-android.jar         $ANDROID
-cp    gdx-backend-android-sources.jar $ANDROID
+cp -r armeabi                         $ANDROID3
+cp -r armeabi-v7a                     $ANDROID3
+cp    gdx-backend-android.jar         $ANDROID3
+cp    gdx-backend-android-sources.jar $ANDROID3
 # Not sure if this one is needed- read Android SDK
 # having a bug exporting it from main project.
 # bottomline was that it is needed?!
-#cp    libs/gdx.jar                         $ANDROID/libs
+#cp    libs/gdx.jar                         $ANDROID3
 
 
 # copy libs for desktop target
 echo "...desktop target..."
-cp gdx-backend-lwjgl-natives.jar $DESKTOP
-cp gdx-backend-lwjgl.jar         $DESKTOP
-cp gdx-natives.jar               $DESKTOP
+cp gdx-backend-lwjgl-natives.jar $DESKTOP3
+cp gdx-backend-lwjgl.jar         $DESKTOP3
+cp gdx-natives.jar               $DESKTOP3
 
 
 # copy libs for main target
 echo "...main target..."
-cp gdx-sources.jar $MAIN
-cp gdx.jar         $MAIN
+cp gdx-sources.jar $MAIN3
+cp gdx.jar         $MAIN3
+
+#########################################################
 
 echo "cleaning up..."
 cd ..
