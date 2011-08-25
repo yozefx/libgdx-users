@@ -42,7 +42,8 @@ public abstract class Example extends AndroidApplication implements ApplicationL
 	// Class files must reside in this path
 	private static final String examplePath = "com.wiztoybox.examplelauncher.examples";
 
-	//TODO: Getting examples automatically could be done with reflection...
+	//TODO: It appears getting examples automatically can't be done with reflection... see
+	//TODO: http://stackoverflow.com/questions/1456930/read-all-classes-from-java-package-in-classpath 
 	public static final Demo[] examples = {
 		// add new Examples here in array examples.
 		// Parameters: Title, class [, orientation]
