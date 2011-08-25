@@ -2,7 +2,6 @@ package com.wiztoybox.examplelauncher.examples;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -10,8 +9,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.wiztoybox.examplelauncher.Example;
 
-public class MovingSprites extends Game {
+public class MovingSprites extends Example {
 
 	private static final int SPRITES = 400;
     
@@ -85,6 +85,12 @@ public class MovingSprites extends Game {
 		font.draw(batch, "Sprites: " + (int)maxSprites  + "    FPS: " + fps, 
 				(int)textPos.x, (int)textPos.y);
 		batch.end();
+	}
+
+	@Override
+	public boolean needsGL20() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

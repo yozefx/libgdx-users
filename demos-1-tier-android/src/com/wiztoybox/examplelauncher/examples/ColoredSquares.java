@@ -1,6 +1,5 @@
 package com.wiztoybox.examplelauncher.examples;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -8,8 +7,9 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.wiztoybox.examplelauncher.Example;
 
-public class ColoredSquares extends Game {
+public class ColoredSquares extends Example {
 
     private OrthographicCamera camera;
 
@@ -95,5 +95,11 @@ public class ColoredSquares extends Game {
         
         return mesh;
     }
+
+	@Override
+	public boolean needsGL20() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

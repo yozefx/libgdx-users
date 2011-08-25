@@ -2,15 +2,15 @@ package com.wiztoybox.examplelauncher.examples;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.wiztoybox.examplelauncher.Example;
 
-public class ColoredLines extends Game {
+public class ColoredLines extends Example {
 
     private static final int LINE_COUNT = 120;
     
@@ -95,5 +95,11 @@ public class ColoredLines extends Game {
         public float green = random.nextFloat();
         public float blue = random.nextFloat();
     }
+
+	@Override
+	public boolean needsGL20() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }
