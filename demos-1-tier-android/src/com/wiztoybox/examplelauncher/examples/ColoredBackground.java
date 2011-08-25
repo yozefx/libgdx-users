@@ -1,8 +1,6 @@
 package com.wiztoybox.examplelauncher.examples;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.graphics.GL10;
 import com.wiztoybox.examplelauncher.Example;
 
@@ -43,8 +41,6 @@ import com.wiztoybox.examplelauncher.Example;
 
 	@Override
     public void create() {
-		initializeForView(this, false);
-		initialize(this, false);
     }
 
     @Override
