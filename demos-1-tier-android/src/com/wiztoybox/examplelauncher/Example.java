@@ -28,10 +28,54 @@
 
 package com.wiztoybox.examplelauncher;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.pm.ActivityInfo;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.wiztoybox.examplelauncher.examples.*;
 
 public abstract class Example extends AndroidApplication implements ApplicationListener {
+
+	// Class files must reside in this path
+	private static final String examplePath = "com.wiztoybox.examplelauncher.examples";
+
+	//TODO: Getting examples automatically could be done with reflection...
+	public static final Demo[] examples = {
+		// add new Examples here in array examples.
+		// Parameters: Title, class [, orientation]
+		// Class files must reside in the given examplePath above!
+		new Demo("Colored Background", ColoredBackground.class),
+		new Demo("Colored Lines", ColoredLines.class),
+		new Demo("Colored Squares", ColoredSquares.class,
+				ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE),
+		new Demo("Moving Sprites", MovingSprites.class) };	
+	
+	//TODO: Titles and orientation setting must be set somehow or
+	//TODO: should be read out with getTitle and getOrientation methods
+	//TODO: in all tests (add to this class as abstract method stubs??)
+
+	public static String[] getNames () {
+		List<String> names = new ArrayList<String>();
+		for (Demo exampleClass : examples){
+			names.add(exampleClass.getClassname().getSimpleName());
+			}
+		return names.toArray(new String[names.size()]);
+	}
+
+	public static Example newExample(String exampleName)
+	{
+		try {
+			Class<?> exampleClass = Class.forName(examplePath + "." + exampleName);
+			return (Example)exampleClass.newInstance();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}	
+	
 	public abstract boolean needsGL20 ();
 
 	public void create () {
@@ -51,23 +95,4 @@ public abstract class Example extends AndroidApplication implements ApplicationL
 
 	public void dispose () {
 	};
-
-	public static Example newExample(String exampleName)
-	{
-		try {
-			Class exampleClass = Class.forName("com.wiztoybox.examplelauncher.examples." + exampleName);
-			return (Example)exampleClass.newInstance();
-		} catch (Exception ex) {
-//TODO: This is not needed if all tests reside in examples folder...			
-//			try {
-//				Class exampleClass = Class.forName("com.wiztoybox.examplelauncher.examples." + exampleName);
-//				return (Example)exampleClass.newInstance();
-//			} catch (Exception e) {
-//				ex.printStackTrace();
-//				return null;
-//			}
-			ex.printStackTrace();
-			return null;
-		}
-	}	
 }
