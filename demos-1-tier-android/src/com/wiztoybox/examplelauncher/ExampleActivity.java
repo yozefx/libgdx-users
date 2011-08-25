@@ -26,11 +26,10 @@ public class ExampleActivity extends AndroidApplication {
 
 	public void onCreate (Bundle bundle) {
 		super.onCreate(bundle);
-		setContentView(R.layout.example_launcher);		
 
 		Bundle extras = getIntent().getExtras();
 		String exampleName = (String)extras.get("Example");
-		Log.i("ExampleName: ", exampleName);
+		Log.i("Starting Example: ", exampleName);
 		Example example = Example.newExample(exampleName);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useGL20 = example.needsGL20();
