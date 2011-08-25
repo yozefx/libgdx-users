@@ -1,40 +1,29 @@
 package com.wiztoybox.examplelauncher;
 
+import java.util.ArrayList;
+
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.wiztoybox.examplelauncher.examples.*;
-
 public class ExampleLauncher extends ListActivity {
-
-	static String[] strings;
-
-	public static final Demo[] demos = {
-			// Add another line for each new demo.
-			// Parameters: Title, class [, orientation]
-			new Demo("Colored Background", ColoredBackground.class),
-			new Demo("Colored Lines", ColoredLines.class),
-			new Demo("Colored Squares", ColoredSquares.class,
-					ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE),
-			new Demo("Moving Sprites", MovingSprites.class) };
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.example_launcher);		
-
-		strings = new String[demos.length];
-		for (int i = 0; i < demos.length; i++) {
-			strings[i] = demos[i].classname.getSimpleName();
+	
+		ArrayList<String> exampleNames = new ArrayList<String>();
+		for (String exampleName : Example.getNames()) {
+			exampleNames.add(exampleName);
 		}
 
-		setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, strings));
+		// this is a second option of adding examples
+		// besides adding them to array in Example.java!
+//		exampleNames.add(ColoredBackground.class.getSimpleName());
+		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, exampleNames.toArray(new String[0])));		
 	}
 
 	@Override
