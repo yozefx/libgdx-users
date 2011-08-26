@@ -35,8 +35,6 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private SpriteBatch spriteBatch2d;
 	private DecalSprite player;
 	private Billboard cloud;
-	// private Vector3 ppos;
-	private int ctr = 0;
 	private GroupStrategy strategy;
 	// private DecalSprite[] walls = new DecalSprite[5];
 	private DecalSprite wall;
@@ -73,14 +71,14 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		String objfile = "data/3d/plane_tris.obj";
 		plane = new MeshHelper(objfile);
 		plane.scale(0.5f, 0.5f, 0.5f);
-		plane.setPos(5, 2f, 5);
+		plane.setPos(3, 1f, 5);
 		plane.setColor(1, 1, 0);
-		plane.setMotion(0,0,1, 0.05f);
+		plane.setMotion(0,0,1, 0.02f);
 		plane.setTexture();
 
 		shadow = new DecalSprite().build("data/icons/shadow/128x64.png");
-		shadow.sprite.setDimensions(1, 1);
-		shadow.sprite.setPosition(plane.pos.x, 0.05f , plane.pos.z);
+		shadow.sprite.setDimensions(1, 0.5f);
+		shadow.sprite.setPosition(plane.pos.x + 1, 0.05f , plane.pos.z);
 		shadow.sprite.rotateX(90);
 		shadow.sprite.rotateZ(90);
 
@@ -99,6 +97,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		badges = addBadges();
 		addPlayer(); // after badges
 		addTiles();
+		
+		oCam.setTargetObj(plane);
 
 		// 2d cloud sprite
 		String imgPath = "data/icons/128/thunder.png";
@@ -228,7 +228,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		plane.update(delta);
 		plane.render(gl, GL10.GL_TRIANGLES);
 		
-		shadow.sprite.setPosition(plane.pos.x, 0.1f, plane.pos.z);
+		shadow.sprite.setPosition(plane.pos.x + 1f, 0.1f, plane.pos.z + 0.5f);
 
 		// the floor grid...
 		gl.glPushMatrix();
@@ -331,19 +331,9 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cloud.project(cam);
 		cloud.update(delta);
 
-		if (ctr++ % 100 == 0) {
-			// Log.out("ppos: " + ppos + "  player:");
-			// Log.out("cld: " + cld);
-			// Log.out("player: " + player.sprite.getPosition() );
-		}
-
 		spriteBatch2d.begin();
 		cloud.setPosition(cloud.spos.x, cloud.spos.y);
 		cloud.draw(spriteBatch2d, 0.8f);
-
-		// player.setPosition(player.spos.x, player.spos.y);
-		// player.draw(spriteBatch2d, 1);
-
 		spriteBatch2d.end();
 		gl.glPopMatrix();
 	}
@@ -382,9 +372,9 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	// ruby modules + monkeypatch would fix this
 	private void spinCam(float dir, float delta) {
 		if (camType == "ortho") {
-			oCam.spin(delta, dir);
+			oCam.spin(dir, delta);
 		} else {
-			pCam.spin(delta, dir);
+			pCam.spin(dir, delta);
 		}
 	}
 

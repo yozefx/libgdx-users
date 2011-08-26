@@ -32,7 +32,7 @@ public class TestCollection implements ApplicationListener, InputProcessor {
 	private InputMultiplexer inputMultiplexer = new InputMultiplexer(this);
 	private final DemoWrapper[] tests = {
 			new DecalWall(),
-			new StageTest(),
+			// new StageTest(),
 			new ParticleEmitterTest(),
 			new ModelViewer(),
 			new PhysicsTest(),

@@ -3,7 +3,6 @@ package com.gdxuser.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
@@ -27,7 +26,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	// viewSize should be related to the size of your scene
 	// scale compared to grid_size - bigger means more area around the playing
 	// field
-	private static final float VIEW_ZOOM = 1.2f;
+	private static final float VIEW_ZOOM = .5f;
 	private static final float CAM_HEIGHT = 10; // how high up the cam is
 
 	private static Vector3 camPos;
@@ -43,6 +42,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
+	private MeshHelper targetObj;
 
 	public GuOrthoCam(float vpw, float vph, Vector2 field) {
 		// super method calls an update() so all better be ready in our update
@@ -53,7 +53,8 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	}
 
 	// TODO - calc center of passed in mesh as targetVec
-	public void setTargetObj(Mesh obj) {
+	public void setTargetObj(MeshHelper plane) {
+		targetObj = plane;
 	}
 
 	public void setTargetVec(float x, float y, float z) {
@@ -67,17 +68,30 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 		camPos = new Vector3(-fieldSize.x, CAM_HEIGHT, 2 * fieldSize.y);
 		position.set(camPos);
 		setTargetVec(fieldSize.x / 2, 0, fieldSize.y / 2); // set default pos
-		updateLookAt();
-		update();
+		// updateLookAt();
+		// update();
 		logInfo();
 	}
 
+	@Override
+	public void update() {
+		updateLookAt();
+		super.update();
+	}
+
+	public void updateLoc() {
+
+	}
+
 	private void updateLookAt() {
-		if (targetVec == null) {
-			Log.out("caught updateLookAt before init()");
-			return;
+		// if (targetVec == null) {
+		// Log.out("caught updateLookAt before init()");
+		// return;
+		// }
+		// lookAt(targetVec.x, targetVec.y, targetVec.z);
+		if (targetObj != null) {
+			lookAt(targetObj.pos.x, targetObj.pos.y, targetObj.pos.z);
 		}
-		lookAt(targetVec.x, targetVec.y, targetVec.z);
 	}
 
 	private void logInfo() {
@@ -97,12 +111,6 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	public void pop() {
 		position.set(campos);
 		this.direction.set(dir);
-	}
-
-	@Override
-	public void update() {
-		updateLookAt();
-		super.update();
 	}
 
 	public void handleKeys() {
@@ -222,22 +230,12 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 		float altitude = 10f;
 		float radius = 10f;
 
-		// TODO WIP
-		// TODO: target set to origin - can't get player pos yet
-		/**
-		 * Rotate camera around a target, cam looks always at target
-		 */
 		float x = (float) Math.sin((position.x + amt_rotate * 360) * DEG)
 				* radius;
 		float z = (float) Math.cos((position.z + amt_rotate * 360) * DEG)
 				* radius;
-		Log.out("amt value: " + amt_rotate);
-		Log.out("orbit values: " + x + ", " + z);
-		Log.out("position: " + position.x + ", " + position.y + ", "
-				+ position.y);
 		position.set(x, altitude, z);
-		lookAt(target.x, target.y, target.z);
-		update();
+		updateLookAt();
 	}
 
 	public void zoom(float amt_zoom) {
@@ -321,7 +319,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 		return false;
 	}
 
-	public void spin(float delta, float dir) {
+	public void spin(float dir, float delta) {
 		if (dir > 0) {
 			goLeft();
 		} else {
@@ -333,7 +331,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	@Override
 	public void spin(float delta, Vector3 dir) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
