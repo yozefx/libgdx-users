@@ -1,13 +1,9 @@
 package com.gdxuser.util;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 public class GuPerspCam extends PerspectiveCamera implements InputProcessor, GuCamera {
@@ -15,13 +11,8 @@ public class GuPerspCam extends PerspectiveCamera implements InputProcessor, GuC
 	private static final float DEG = (float) (Math.PI / 180f);
 	private static final int CAMSPEED = 40;
 	private static Vector3 campos;
-	private static float aspect;
-	private Matrix4 comb;
 	private Vector3 dir;
 
-	private static int VP_WIDTH;
-	private static int VP_HEIGHT;
-	private float VP_ASPECT_RATIO;
 	private static float FOV = 50f;
 	private static final Vector3 CAM_POS_INITIAL = new Vector3(15f, 15f, 8f);
 	private static final float CAM_NEAR_INITIAL = 0.1f;
@@ -33,9 +24,6 @@ public class GuPerspCam extends PerspectiveCamera implements InputProcessor, GuC
 	// viewsize should be related to the size of your scene
 	public GuPerspCam(float VP_WIDTH, float VP_HEIGHT, float viewSize) {
 		super(FOV, VP_WIDTH, VP_HEIGHT);
-		VP_ASPECT_RATIO = (float) VP_WIDTH / (float) VP_HEIGHT;
-		// super(viewSize, viewSize * (h / w));
-
 		Log.out("Cam-Up:        " + up.x + ", " + up.y + ", " + up.z);
 		Log.out("Cam-Position:  " + position.x + ", " + position.y + ", "
 				+ position.z);

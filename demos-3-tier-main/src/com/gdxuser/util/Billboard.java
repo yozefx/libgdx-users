@@ -13,10 +13,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.actors.Image;
 
 public class Billboard extends Sprite {
-	private static final float ANIM_SPEED = 1f;
 	public Vector3 wpos = new Vector3(0,0,0);	// WORLD position
 	public Vector3 spos = new Vector3(0,0,0);	// SCREEN pos
 	public Vector3 wmove = new Vector3(0,0,0);

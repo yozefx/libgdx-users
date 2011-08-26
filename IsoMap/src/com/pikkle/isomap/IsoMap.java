@@ -236,7 +236,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		gl.glColor4f(0, 1, 0, 1f);
 		floor.render(gl, GL10.GL_LINE_STRIP);
 		gl.glColor4f(1, 0, 0, 1f);
-		cube.render(gl, GL10.GL_LINE_STRIP);
+		cube.render(gl, GL10.GL_TRIANGLES);
 
 		gl.glPopMatrix();
 
