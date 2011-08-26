@@ -68,12 +68,13 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		floor = new FloorGrid(GRIDSIZE);
 
 		String objfile = "data/3d/plane_tris.obj";
-		// String objfile = "data/3d/cube.obj";
 		plane = new MeshHelper(objfile);
 		// plane.scale(1, 1f, 5);
 		plane.setPos(5, 2f, 5);
 		plane.setColor(1, 1, 0);
 
+		plane.setTexture();
+		
 		cube = new Cube();
 		cube.scale(0.5f).setPos(0.5f, 0.5f, 0.5f).setColor(0, 1, 0);
 
@@ -111,10 +112,11 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 	private ArrayList<DecalSprite> addWalls() {
 		// decals for walls
-		wall = new DecalSprite().build("data/decals/256/blueflower.png");
-		wall.sprite.setDimensions(6, 6);
-		wall.sprite.setPosition(5, 3, 0);
-		walls.add(wall);
+		/*
+		 * wall = new DecalSprite().build("data/decals/256/blueflower.png");
+		 * wall.sprite.setDimensions(2, 2); wall.sprite.setPosition(5, 1, 0);
+		 * walls.add(wall);
+		 */
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.setDimensions(2, 2);
@@ -146,13 +148,13 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
 		wall.sprite.rotateY(90);
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(GRIDSIZE.x, 3, 3);
+		wall.sprite.setPosition(GRIDSIZE.x, 1, 3);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
 		wall.sprite.rotateY(90);
-		wall.sprite.setPosition(GRIDSIZE.x, 2, 6);
-		wall.sprite.setDimensions(4, 4);
+		wall.sprite.setPosition(GRIDSIZE.x, 1, 6);
+		wall.sprite.setDimensions(2, 2);
 		walls.add(wall);
 
 		return walls;
@@ -212,18 +214,17 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		cam.update();
 		cam.apply(gl);
 
+		setUpLighting(gl);
+		// gl.glColor4f(1, 1, 0, 1f);
+		plane.render(gl, GL10.GL_TRIANGLES);
+
 		// the floor grid...
 		gl.glPushMatrix();
 
-		if (debugRender) {
-			gl.glColor4f(0, 1, 0, 1f);
-			floor.render(gl, GL10.GL_LINE_STRIP);
-			gl.glColor4f(1, 0, 0, 1f);
-			cube.render(gl, GL10.GL_LINE_STRIP);
-
-			gl.glColor4f(1, 1, 0, 1f);
-			plane.render(gl, GL10.GL_LINE_STRIP);
-		}
+		gl.glColor4f(0, 1, 0, 1f);
+		floor.render(gl, GL10.GL_LINE_STRIP);
+		gl.glColor4f(1, 0, 0, 1f);
+		cube.render(gl, GL10.GL_LINE_STRIP);
 
 		gl.glPopMatrix();
 
@@ -256,6 +257,34 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		oCam.handleKeys();
 
+	}
+
+	// float[] lightPosition = { 5f, 5f, 5f, 0f };
+	float[] lightPosition = { 0, 0, 1, 1 };
+	float[] lightColor = { 1, 1, 1, 0 };
+	float amb = 0.1f; // ambient light
+
+	private void setUpLighting(GL10 gl) {
+
+		gl.glEnable(GL10.GL_LIGHTING);
+		gl.glEnable(GL10.GL_LIGHT0);
+		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPosition, 0);
+		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[] { 0.9f, 0.9f,
+				0.7f, 1f }, 0);
+		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[] { amb, amb,
+				amb, 1f }, 0);
+		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_CONSTANT_ATTENUATION, .05f);
+
+		// Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, lightColor, 0);
+		// Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPosition,
+		// 0);
+		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+
+		// // draw game without lights
+		// Gdx.gl.glDisable(GL10.GL_LIGHTING);
+		// Gdx.gl.glDisable(GL10.GL_TEXTURE_2D);
+		// Gdx.gl.glDisable(GL10.GL_COLOR_MATERIAL);
+		// Gdx.gl.glDisable(GL10.GL_LIGHT0);
 	}
 
 	private void drawClouds(GL10 gl, float delta) {

@@ -10,9 +10,18 @@
 
 package com.gdxuser.util;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g3d.Material;
+
+//import com.badlogic.gdx.graphics.ModelLoader;
+// import com.badlogic.gdx.graphics.g3d.Material.TextureAttribute;
+
 import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderOld;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -97,4 +106,13 @@ public class MeshHelper {
 		mesh.render(GL10.GL_LINE_STRIP);
 		gl.glPopMatrix();		
 	}
+
+	public void setTexture() {
+//		Texture texture = new Texture(Gdx.files.internal("data/image.png"), true);
+//		texture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+//		Material material = new Material("Material1", new TextureAttribute(texture, 0, "part"));
+//		mesh.material = material;
+//		Texture texture = Gdx.graphics.newTexture( Gdx.files.getFileHandle( "data/badlogic.jpg", FileType.Internal), TextureFilter.MipMap, TextureFilter.Linear, TextureWrap.ClampToEdge, TextureWrap.ClampToEdge );
+	}
+	
 }
