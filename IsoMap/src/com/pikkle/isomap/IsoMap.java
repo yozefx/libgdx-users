@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.gdxuser.util.Billboard;
 import com.gdxuser.util.Cube;
 import com.gdxuser.util.DecalSprite;
@@ -26,18 +24,16 @@ import com.gdxuser.util.MathUtil;
 import com.gdxuser.util.MeshHelper;
 
 public class IsoMap extends DemoWrapper implements InputProcessor {
-	private static final Vector2 fieldSize = new Vector2(10, 10);
+	private static final Vector2 GRIDSIZE = new Vector2(10, 10);
 	private static final float TILESIZE = 2f;
 	private static final int NUMTILES = 5;
-	float screenWidth;
-	float screenHeight;
 	private Cube cube;
 	FloorGrid floor;
 	private DecalBatch decalBatch;
 	private SpriteBatch spriteBatch2d;
 	private DecalSprite player;
 	private Billboard cloud;
-	private Vector3 ppos;
+	// private Vector3 ppos;
 	private int ctr = 0;
 	private GroupStrategy strategy;
 	// private DecalSprite[] walls = new DecalSprite[5];
@@ -53,24 +49,23 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private String camType = "ortho";
 	private boolean debugRender = false;
 	private Vector2 screenSize;
-	private Vector2 last = new Vector2(0,0);
+	private Vector2 last = new Vector2(0, 0);
 
 	@Override
 	public void create() {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
 
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
-		screenSize = new Vector2(screenWidth, screenHeight);
+		screenSize = new Vector2(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 
-		oCam = new GuOrthoCam(screenWidth, screenHeight, fieldSize);
+		oCam = new GuOrthoCam(screenSize.x, screenSize.y, GRIDSIZE);
 		pCam = new GuPerspCam(50, 50, 50);
 
 		cam = oCam; // so we can switch
 
 		// put some basic furniture in
-		floor = new FloorGrid(fieldSize);
+		floor = new FloorGrid(GRIDSIZE);
 
 		String objfile = "data/3d/plane_tris.obj";
 		// String objfile = "data/3d/cube.obj";
@@ -123,40 +118,40 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(0, 1, fieldSize.y);
+		wall.sprite.setPosition(0, 1, GRIDSIZE.y);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(2, 1, fieldSize.y);
+		wall.sprite.setPosition(2, 1, GRIDSIZE.y);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(4, 1, fieldSize.y);
-		walls.add(wall);
-
-		wall = new DecalSprite().build("data/decals/64/sakura.png");
-		wall.sprite.rotateY(90);
-		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(fieldSize.x, 1, 1);
+		wall.sprite.setPosition(4, 1, GRIDSIZE.y);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/sakura.png");
 		wall.sprite.rotateY(90);
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(fieldSize.x, 1, 3);
+		wall.sprite.setPosition(GRIDSIZE.x, 1, 1);
+		walls.add(wall);
+
+		wall = new DecalSprite().build("data/decals/64/sakura.png");
+		wall.sprite.rotateY(90);
+		wall.sprite.setDimensions(2, 2);
+		wall.sprite.setPosition(GRIDSIZE.x, 1, 3);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
 		wall.sprite.rotateY(90);
 		wall.sprite.setDimensions(2, 2);
-		wall.sprite.setPosition(fieldSize.x, 3, 3);
+		wall.sprite.setPosition(GRIDSIZE.x, 3, 3);
 		walls.add(wall);
 
 		wall = new DecalSprite().build("data/decals/64/colormosaic.png");
 		wall.sprite.rotateY(90);
-		wall.sprite.setPosition(fieldSize.x, 2, 6);
+		wall.sprite.setPosition(GRIDSIZE.x, 2, 6);
 		wall.sprite.setDimensions(4, 4);
 		walls.add(wall);
 
@@ -171,7 +166,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 			badge.sprite.setDimensions(1, 1);
 			float x = MathUtil.random(8) + 1;
 			float y = MathUtil.random(8) + 1;
-			if (x==5 || y==5) {
+			if (x == 5 || y == 5) {
 				continue;
 			}
 			badge.sprite.setPosition(x, 0.6f, y);
@@ -294,15 +289,15 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
 		// Log.out("dragged:",x,y);
-		float dir; 
-		if (x<last.x) {
+		float dir;
+		if (x < last.x) {
 			dir = 1;
 		} else {
 			dir = -1;
 		}
 		last.x = x;
 		float delta = Gdx.graphics.getDeltaTime();
-		
+
 		spinCam(delta, dir);
 		return false;
 	}
