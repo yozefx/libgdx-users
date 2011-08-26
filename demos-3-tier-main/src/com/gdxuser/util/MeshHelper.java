@@ -10,30 +10,23 @@
 
 package com.gdxuser.util;
 
-import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
-import com.badlogic.gdx.graphics.g3d.Material;
-
-//import com.badlogic.gdx.graphics.ModelLoader;
-// import com.badlogic.gdx.graphics.g3d.Material.TextureAttribute;
-
 import com.badlogic.gdx.graphics.g3d.loaders.ModelLoaderOld;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 
 public class MeshHelper {
 
 	public Mesh mesh;
 	public Vector3 size;
 	public float scale;
-	private Vector3 pos = new Vector3(0,0,0);
-	private BoundingBox bbox;
-	private Vector3 color = new Vector3(1,1,1);
+	public Vector3 pos = new Vector3(0,0,0);
+	public Vector3 bbox = new Vector3(10f,10f,10f);	// default area
+	public Vector3 color = new Vector3(1,1,1);
+	public Vector3 moveBy = new Vector3(0,0,0);
+
+	public boolean shadow = true;
 
 	public MeshHelper(String fpath) {
 		load(fpath);
@@ -72,11 +65,11 @@ public class MeshHelper {
 		gl.glPopMatrix();
 	}
 	
-	public  BoundingBox getSize() {
-		bbox = mesh.calculateBoundingBox();
-		Log.out("bbox:" + bbox);
-		return bbox;
-	}
+//	public  BoundingBox getSize() {
+//		// bbox = mesh.calculateBoundingBox();
+//		Log.out("bbox:" + bbox);
+//		return bbox;
+//	}
 
 	public Vector3 getPos() {
 		return pos;
@@ -107,6 +100,18 @@ public class MeshHelper {
 		gl.glPopMatrix();		
 	}
 
+	public MeshHelper setMotion(float x, float y, float z, float speed) {
+		moveBy  = new Vector3(x*speed, y*speed, z*speed);
+		return this;
+	}
+	
+	public void update(float delta) {
+		pos.add(moveBy);
+		if (pos.x < 0 || pos.x > bbox.x ) { moveBy.x = - moveBy.x; }
+		if (pos.z < 0 || pos.z > bbox.z ) { moveBy.z = -moveBy.z; }
+	}
+
+	
 	public void setTexture() {
 //		Texture texture = new Texture(Gdx.files.internal("data/image.png"), true);
 //		texture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);

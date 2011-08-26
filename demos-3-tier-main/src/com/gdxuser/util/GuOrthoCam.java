@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,16 +17,10 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	private static final float DEG = (float) (Math.PI / 180f);
 	private static final int CAMSPEED = 40;
 	private static Vector3 campos;
-	private static float aspect;
-	private Matrix4 comb;
 	private Vector3 dir;
 	private Vector2 fieldSize;
 	private Vector3 targetVec = new Vector3(0, 0, 0); // need a default value
-	private Mesh targetObj;
-
-	private static float vpWidth;
 	private static float vpHeight;
-	private static float vpAspectRatio;
 	private static final float CAM_NEAR_INITIAL = 0.1f;
 	private static final float CAM_FAR_INITIAL = 200f;
 
@@ -39,7 +32,6 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 
 	private static Vector3 camPos;
 
-	private static Vector3 CAM_DIR_INITIAL;
 	private static Vector3 CAM_LOOKAT_INITIAL;
 	private static Vector3 CAM_UP_INITIAL = new Vector3(0, 1, 0);
 	private static float relative_rotation_angle = 0;
@@ -55,16 +47,13 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	public GuOrthoCam(float vpw, float vph, Vector2 field) {
 		// super method calls an update() so all better be ready in our update
 		super(field.x * VIEW_ZOOM, field.x * VIEW_ZOOM * (vph / vpw));
-		vpAspectRatio = (float) vpWidth / (float) vpHeight;
 		vpHeight = vph;
-		vpWidth = vpw;
 		fieldSize = field;
 		init();
 	}
 
 	// TODO - calc center of passed in mesh as targetVec
 	public void setTargetObj(Mesh obj) {
-		targetObj = obj;
 	}
 
 	public void setTargetVec(float x, float y, float z) {
@@ -333,7 +322,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	}
 
 	public void spin(float delta, float dir) {
-		if (dir < 0) {
+		if (dir > 0) {
 			goLeft();
 		} else {
 			goRight();

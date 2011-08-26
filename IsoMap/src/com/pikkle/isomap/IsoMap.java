@@ -1,5 +1,6 @@
 package com.pikkle.isomap;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.gdxuser.util.Billboard;
 import com.gdxuser.util.Cube;
 import com.gdxuser.util.DecalSprite;
@@ -42,6 +44,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private ArrayList<DecalSprite> badges = new ArrayList<DecalSprite>();
 	private ArrayList<DecalSprite> tiles = new ArrayList<DecalSprite>();
 	private MeshHelper plane;
+	private DecalSprite shadow;
 	// camera
 	private Camera cam;
 	private GuOrthoCam oCam;
@@ -69,12 +72,18 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		String objfile = "data/3d/plane_tris.obj";
 		plane = new MeshHelper(objfile);
-		// plane.scale(1, 1f, 5);
+		plane.scale(0.5f, 0.5f, 0.5f);
 		plane.setPos(5, 2f, 5);
 		plane.setColor(1, 1, 0);
-
+		plane.setMotion(0,0,1, 0.05f);
 		plane.setTexture();
-		
+
+		shadow = new DecalSprite().build("data/icons/shadow/128x64.png");
+		shadow.sprite.setDimensions(1, 1);
+		shadow.sprite.setPosition(plane.pos.x, 0.05f , plane.pos.z);
+		shadow.sprite.rotateX(90);
+		shadow.sprite.rotateZ(90);
+
 		cube = new Cube();
 		cube.scale(0.5f).setPos(0.5f, 0.5f, 0.5f).setColor(0, 1, 0);
 
@@ -216,7 +225,10 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		setUpLighting(gl);
 		// gl.glColor4f(1, 1, 0, 1f);
+		plane.update(delta);
 		plane.render(gl, GL10.GL_TRIANGLES);
+		
+		shadow.sprite.setPosition(plane.pos.x, 0.1f, plane.pos.z);
 
 		// the floor grid...
 		gl.glPushMatrix();
@@ -240,6 +252,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		for (DecalSprite tile : tiles) {
 			decalBatch.add(tile.sprite);
 		}
+		
+		decalBatch.add(shadow.sprite);
 
 		decalBatch.flush();
 
@@ -250,7 +264,9 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 		cam.update();
 		cam.apply(gl);
-
+		
+		// turn off lighting for 2d sprites
+		gl.glDisable(GL10.GL_LIGHTING);
 		drawClouds(gl, delta);
 
 		gl.glPopMatrix();
@@ -259,32 +275,55 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 
 	}
 
-	// float[] lightPosition = { 5f, 5f, 5f, 0f };
-	float[] lightPosition = { 0, 0, 1, 1 };
-	float[] lightColor = { 1, 1, 1, 0 };
-	float amb = 0.1f; // ambient light
-
 	private void setUpLighting(GL10 gl) {
-
+		// turns on lighting
 		gl.glEnable(GL10.GL_LIGHTING);
+
+		// Enable up to n=8 light sources: GL_LIGHTn
 		gl.glEnable(GL10.GL_LIGHT0);
-		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPosition, 0);
-		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, new float[] { 0.9f, 0.9f,
-				0.7f, 1f }, 0);
-		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, new float[] { amb, amb,
-				amb, 1f }, 0);
+		gl.glEnable(GL10.GL_LIGHT1);
+		gl.glEnable(GL10.GL_LIGHT2);
+
+		// setting specular light color like a halogen spot
+		FloatBuffer spotDir = BufferUtils.newFloatBuffer(8);
+		spotDir.put(new float[] { -2, -2, -2 });
+		float[] spotColor = new float[] { 0.9f, 0.9f, 0.9f, 1f };
+		float[] spotPos = new float[] { 10, 3, 15, 1 };
+		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPECULAR, spotColor, 0);
+		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, spotPos, 0);
+		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPOT_DIRECTION, spotDir);
+
+		// defines how light amount reduces if model gets away from light source
+		// GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION,
+		// GL_QUADRATIC_ATTENUATION
 		gl.glLightf(GL10.GL_LIGHT0, GL10.GL_CONSTANT_ATTENUATION, .05f);
 
-		// Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, lightColor, 0);
-		// Gdx.gl10.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPosition,
-		// 0);
-		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		// spotlight
+		// high exponent values makes light cone's center brighter
+		FloatBuffer fb_pos = BufferUtils.newFloatBuffer(8);
+		fb_pos.put(new float[] { 15, 15, 15, 1 });
+		FloatBuffer fb_dir = BufferUtils.newFloatBuffer(8);
+		fb_dir.put(new float[] { -2, -2, -2 });
+		gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_POSITION, fb_pos);
+		gl.glLightfv(GL10.GL_LIGHT1, GL10.GL_SPOT_DIRECTION, fb_dir);
+		float angle = 30;
+		gl.glLightf(GL10.GL_LIGHT1, GL10.GL_SPOT_CUTOFF, angle);
 
-		// // draw game without lights
-		// Gdx.gl.glDisable(GL10.GL_LIGHTING);
-		// Gdx.gl.glDisable(GL10.GL_TEXTURE_2D);
-		// Gdx.gl.glDisable(GL10.GL_COLOR_MATERIAL);
-		// Gdx.gl.glDisable(GL10.GL_LIGHT0);
+		// ambient light
+		float amb1 = 0.8f;
+		float[] amb = new float[] { amb1, amb1, amb1, 1f };
+		gl.glLightf(GL10.GL_LIGHT2, GL10.GL_CONSTANT_ATTENUATION, .05f);
+		gl.glLightfv(GL10.GL_LIGHT2, GL10.GL_AMBIENT, amb, 0);
+
+		// pitch black
+		// gl.glLightfv(GL10.GL_LIGHT2, GL10.GL_AMBIENT, new float[]{0.005f,
+		// 0.005f, 0.005f, 1f}, 0);
+
+		// no effect
+		// float global_ambient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+		// gl.glLightfv(GL10.GL_LIGHT2, GL10.GL_LIGHT_MODEL_AMBIENT,
+		// global_ambient, 0);
+
 	}
 
 	private void drawClouds(GL10 gl, float delta) {
@@ -318,16 +357,20 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
 		// Log.out("dragged:",x,y);
-		float dir;
-		if (x < last.x) {
-			dir = 1;
-		} else {
-			dir = -1;
-		}
-		last.x = x;
 		float delta = Gdx.graphics.getDeltaTime();
+		float dir;
+		dir = x - last.x;
+		Log.out("dir=" + dir);
+		last.x = x;
 
-		spinCam(delta, dir);
+//		if (x < last.x) {
+//			dir = 1;
+//		} else {
+//			dir = -1;
+//		}
+//		last.x = x;
+
+		spinCam(dir, delta);
 		return false;
 	}
 
@@ -337,7 +380,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	// hence the ugly code below since polymorphism isnt real
 	// interfaces dont help either so need some much more complex pattern
 	// ruby modules + monkeypatch would fix this
-	private void spinCam(float delta, float dir) {
+	private void spinCam(float dir, float delta) {
 		if (camType == "ortho") {
 			oCam.spin(delta, dir);
 		} else {
