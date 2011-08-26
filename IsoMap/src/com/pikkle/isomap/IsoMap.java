@@ -47,7 +47,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private GuOrthoCam oCam;
 	private GuPerspCam pCam;
 	private String camType = "ortho";
-	private boolean debugRender = false;
+	private boolean debugRender = true;
 	private Vector2 screenSize;
 	private Vector2 last = new Vector2(0, 0);
 
