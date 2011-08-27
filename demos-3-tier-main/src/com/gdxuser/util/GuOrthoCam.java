@@ -52,9 +52,8 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 		init();
 	}
 
-	// TODO - calc center of passed in mesh as targetVec
-	public void setTargetObj(MeshHelper plane) {
-		targetObj = plane;
+	public void setTargetObj(MeshHelper mh) {
+		targetObj = mh;
 	}
 
 	public void setTargetVec(float x, float y, float z) {

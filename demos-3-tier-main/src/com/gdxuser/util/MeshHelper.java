@@ -28,6 +28,10 @@ public class MeshHelper {
 
 	public boolean shadow = true;
 
+	public MeshHelper() {
+		// overloaded constructor
+	}
+
 	public MeshHelper(String fpath) {
 		load(fpath);
 	}

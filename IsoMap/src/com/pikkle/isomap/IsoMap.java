@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.gdxuser.util.Billboard;
 import com.gdxuser.util.Cube;
@@ -24,9 +25,10 @@ import com.gdxuser.util.GuPerspCam;
 import com.gdxuser.util.Log;
 import com.gdxuser.util.MathUtil;
 import com.gdxuser.util.MeshHelper;
+import com.pikkle.scenery.Builder;
 
 public class IsoMap extends DemoWrapper implements InputProcessor {
-	private static final Vector2 GRIDSIZE = new Vector2(10, 10);
+	private static final Vector2 GRIDSIZE = new Vector2(16, 16);
 	private static final float TILESIZE = 2f;
 	private static final int NUMTILES = 5;
 	private Cube cube;
@@ -51,16 +53,24 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 	private boolean debugRender = true;
 	private Vector2 screenSize;
 	private Vector2 last = new Vector2(0, 0);
+	private Builder builder;
 
 	@Override
 	public void create() {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
 
+		builder = new Builder();
+		builder.addIslands();
+		builder.addBoats();
+
 		screenSize = new Vector2(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 
 		oCam = new GuOrthoCam(screenSize.x, screenSize.y, GRIDSIZE);
+		oCam.position.set(8, 5, -8);
+		oCam.setTargetObj(builder.target);
+		
 		pCam = new GuPerspCam(50, 50, 50);
 
 		cam = oCam; // so we can switch
@@ -96,9 +106,8 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		// some stuff that should face the camera
 		badges = addBadges();
 		addPlayer(); // after badges
-		addTiles();
+		// addTiles();
 		
-		oCam.setTargetObj(plane);
 
 		// 2d cloud sprite
 		String imgPath = "data/icons/128/thunder.png";
@@ -227,6 +236,7 @@ public class IsoMap extends DemoWrapper implements InputProcessor {
 		// gl.glColor4f(1, 1, 0, 1f);
 		plane.update(delta);
 		plane.render(gl, GL10.GL_TRIANGLES);
+		builder.render(gl, delta);
 		
 		shadow.sprite.setPosition(plane.pos.x + 1f, 0.1f, plane.pos.z + 0.5f);
 
