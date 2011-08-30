@@ -25,6 +25,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.gdxuser.demos.DecalWall;
 import com.gdxuser.demos.ModelViewer;
 import com.gdxuser.demos.QuadRenderTest;
+import com.gdxuser.demos.SubMeshColorTest;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
@@ -34,6 +35,7 @@ public class TestCollection implements ApplicationListener, InputProcessor {
 			new DecalWall(),
 			// new StageTest(),
 			new ParticleEmitterTest(),
+			new SubMeshColorTest(),
 			new ModelViewer(),
 			new PhysicsTest(),
 			new DecalTest(),
