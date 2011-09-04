@@ -44,11 +44,15 @@ public class PhysicsTest extends DemoWrapper implements ApplicationListener {
  
 	@Override
 	public void create() {
+		
+		//Setup opengl
+		Gdx.gl.glClearColor(0,0,0,1); //Set screen color to black
+		
 		world = new World(new Vector2(0, -20), true);		
 		renderer = new Box2DDebugRenderer();
 		cam = new OrthographicCamera(28, 20);
 		createWorld();
-//		Gdx.input.setInputProcessor(this);
+		
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 	}

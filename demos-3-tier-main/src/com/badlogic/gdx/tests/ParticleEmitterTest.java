@@ -39,6 +39,10 @@ public class ParticleEmitterTest extends DemoWrapper implements InputProcessor{
 	public void create () {
 		spriteBatch = new SpriteBatch();
 
+		Gdx.gl.glClearColor(0,0,0,1); //Set screen color to black
+		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST); //Disable depth test (not needed)
+		Gdx.gl.glDisable(GL10.GL_TEXTURE_2D);
+		
 		effect = new ParticleEffect();
 		effect.load(Gdx.files.internal("data/test.p"), Gdx.files.internal("data"));
 		effect.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);

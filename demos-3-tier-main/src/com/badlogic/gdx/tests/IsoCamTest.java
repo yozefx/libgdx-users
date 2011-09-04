@@ -31,6 +31,7 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.gdxuser.util.DemoWrapper;
+import com.gdxuser.util.Log;
 
 public class IsoCamTest extends DemoWrapper implements InputProcessor{
 	private static final int TARGET_WIDTH = 480;
@@ -40,6 +41,8 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 	SpriteBatch batch;
 	final Sprite[][] sprites = new Sprite[10][10];
 	final Matrix4 matrix = new Matrix4();
+	
+	IsoCamController isoController;
 	
 	@Override
 	public void create () {
@@ -52,6 +55,7 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 		cam.near = 1;
 		cam.far = 1000;
 		matrix.setToRotation(new Vector3(1, 0, 0), 90);
+		isoController = new IsoCamController(cam);
 
 		for (int z = 0; z < 10; z++) {
 			for (int x = 0; x < 10; x++) {
@@ -63,8 +67,6 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 
 		batch = new SpriteBatch();
 		
-		// didn't manage to add this one to InputMultiplexer - no clue why...
-		Gdx.input.setInputProcessor(new IsoCamController(cam));
 	}
 
 	@Override
@@ -83,6 +85,17 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 		batch.end();
 
 		checkTileTouched();
+	}
+	
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) 
+	{
+		return isoController.touchDragged(x, y, pointer);
+	}
+	
+	public boolean touchUp(int x, int y, int pointer, int button) 
+	{
+		return isoController.touchUp(x, y, pointer, button);
 	}
 
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
@@ -123,7 +136,6 @@ public class IsoCamTest extends DemoWrapper implements InputProcessor{
 		public boolean touchDragged (int x, int y, int pointer) {
 			Ray pickRay = camera.getPickRay(x, y);
 			Intersector.intersectRayPlane(pickRay, xzPlane, curr);
-			
 			if (!(last.x == -1 && last.y == -1 && last.z == -1)) {
 				pickRay = camera.getPickRay(last.x, last.y);
 				Intersector.intersectRayPlane(pickRay, xzPlane, delta);

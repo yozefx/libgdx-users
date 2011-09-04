@@ -20,7 +20,7 @@ import com.gdxuser.util.GuOrthoCam;
 import com.gdxuser.util.Log;
 import com.gdxuser.util.MeshHelper;
 
-public class ModelViewer extends DemoWrapper implements InputProcessor {
+public class ModelViewer extends DemoWrapper {
 
 	private static final Vector2 FIELD_SIZE = new Vector2(10, 10);
 	static float amt;
@@ -45,8 +45,10 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 	@Override
 	public void create() {
 		GL10 gl = Gdx.gl10;
+		
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LESS);
+		gl.glClearColor(0, 0, 0, 1);
 
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
@@ -80,7 +82,6 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 		floor.renderWireframe(gl);
 		cube.renderWireframe(gl);
 
-		gl.glColor4f(0, 0, 0.5f, 0);
 		// mesh.render(gl, GL10.GL_AMBIENT_AND_DIFFUSE);
 		mesh.render(gl, GL10.GL_TRIANGLES);
 
@@ -186,29 +187,14 @@ public class ModelViewer extends DemoWrapper implements InputProcessor {
 		last.set(-1, -1, -1);
 		return true;
 	}
-
+	
 	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchMoved(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
+	public void dispose()
+	{
+		//Everything that we change in the openglState needs to be reverted to it original state
+		//or some other tests might break
+		GL10 gl = Gdx.app.getGraphics().getGL10();
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 	}
 
 }

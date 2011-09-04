@@ -29,6 +29,9 @@ public class SubMeshColorTest extends DemoWrapper{
 		// Enable Z-sorting, depth test
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 
+		// Set clear screen color to white
+		gl.glClearColor(1, 1, 1, 1);
+		
 		// Enable per vertex / per face color
 		// activates "Color Tracking" which tells OpenGL that it
 		// will get material attributes from glColor calls
@@ -53,11 +56,10 @@ public class SubMeshColorTest extends DemoWrapper{
 	}
 	@Override
 	public void render() {
-		// clear screen and set it to white
+		
 		// never forget |GL10.GL_DEPTH_BUFFER_BIT
 		// because this makes 3D-Meshes flicker
 		// and they get some kind of shine-through
-		gl.glClearColor(1, 1, 1, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		gl.glPushMatrix();
@@ -76,5 +78,22 @@ public class SubMeshColorTest extends DemoWrapper{
 		gl.glColor4f(0, 0, 1, 1);
 		plane.getSubMesh("plane_rudder").mesh.render(GL10.GL_TRIANGLES);
 		gl.glPopMatrix();
+	}
+	
+	@Override
+	public void dispose()
+	{
+		//Everything that we change in the openglState needs to be reverted to it original state
+		//or some other tests might break
+		gl = Gdx.app.getGraphics().getGL10();
+
+		
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+
+		gl.glDisable(GL10.GL_CULL_FACE);
+		gl.glCullFace(GL10.GL_BACK);
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glClearColor(0, 0, 0, 1);
 	}
 }
