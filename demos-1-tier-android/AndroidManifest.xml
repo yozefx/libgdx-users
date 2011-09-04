@@ -8,7 +8,10 @@
     <application android:icon="@drawable/icon"
     				android:label="@string/app_name"
     				android:debuggable="true">
-
+<!--android:configChanges="keyboard|keyboardHidden|orientation"
+	These 3 will trigger the onConfigurationChanged method
+	in whatever Activity you call. If you override the method
+	you can pass in the new values.--> 
         <activity android:name=".ExampleLauncher"
                   android:label="@string/app_name"
 					android:configChanges="keyboard|keyboardHidden|orientation">
