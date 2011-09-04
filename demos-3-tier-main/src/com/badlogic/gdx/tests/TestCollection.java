@@ -26,6 +26,7 @@ import com.gdxuser.demos.DecalWall;
 import com.gdxuser.demos.ModelViewer;
 import com.gdxuser.demos.QuadRenderTest;
 import com.gdxuser.demos.SubMeshColorTest;
+import com.gdxuser.demos.SubMeshRandomColorTest;
 import com.gdxuser.util.DemoWrapper;
 import com.gdxuser.util.Log;
 
@@ -33,9 +34,10 @@ public class TestCollection implements ApplicationListener, InputProcessor {
 	private InputMultiplexer inputMultiplexer = new InputMultiplexer(this);
 	private final DemoWrapper[] tests = {
 			new DecalWall(),
-			// new StageTest(),
+			new StageTest(),
 			new ParticleEmitterTest(),
 			new SubMeshColorTest(),
+			new SubMeshRandomColorTest(),
 			new ModelViewer(),
 			new PhysicsTest(),
 			new DecalTest(),
