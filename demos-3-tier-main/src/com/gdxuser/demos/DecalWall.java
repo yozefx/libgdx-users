@@ -21,6 +21,8 @@ import com.gdxuser.util.GuOrthoCam;
 import com.gdxuser.util.Log;
 
 public class DecalWall extends DemoWrapper implements InputProcessor {
+	GL10 gl;
+	
 	private static final Vector2 fieldSize = new Vector2(10, 10);
 	float w;
 	float h;
@@ -42,9 +44,11 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 	@Override
 	public void create() {
-		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
-		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
-		Gdx.gl10.glClearColor(0.5f, 0.5f, 0.5f, 1);
+		gl = Gdx.gl10;
+		
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL10.GL_LESS);
+		gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
@@ -151,7 +155,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 
 	@Override
 	public void render() {
-		GL10 gl = Gdx.app.getGraphics().getGL10();
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		float delta = Gdx.graphics.getDeltaTime();
@@ -221,10 +224,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 		spriteBatch2d.end();
 		gl.glPopMatrix();
 	}
-
-//	private void overlay(GL10 gl) {
-//
-//	}
 
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		Log.out("touched:" + x + y);

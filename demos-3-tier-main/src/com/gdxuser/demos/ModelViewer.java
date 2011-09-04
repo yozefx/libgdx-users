@@ -6,7 +6,6 @@ package com.gdxuser.demos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Plane;
@@ -21,6 +20,7 @@ import com.gdxuser.util.Log;
 import com.gdxuser.util.MeshHelper;
 
 public class ModelViewer extends DemoWrapper {
+	GL10 gl;
 
 	private static final Vector2 FIELD_SIZE = new Vector2(10, 10);
 	static float amt;
@@ -44,18 +44,23 @@ public class ModelViewer extends DemoWrapper {
 
 	@Override
 	public void create() {
-		GL10 gl = Gdx.gl10;
+		gl = Gdx.gl10;
 		
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LESS);
 		gl.glClearColor(0, 0, 0, 1);
 
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
 
 		cam = new GuOrthoCam(w, h, FIELD_SIZE);
-		cam.setTargetVec(FIELD_SIZE.x / 2, 0, FIELD_SIZE.y / 2);
-
+		cam.translate(2, 4, 20);
+		cam.update();
+		cam.apply(gl);
+		
 		// put some basic furniture in
 		floor = new FloorGrid(FIELD_SIZE);
 		floor.setColor(0, 1, 0);
@@ -73,10 +78,12 @@ public class ModelViewer extends DemoWrapper {
 	@Override
 	public void render() {
 		amt = 40 * Gdx.graphics.getDeltaTime();
-		GL10 gl = Gdx.app.getGraphics().getGL10();
 		gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
+		// always follow airplane with camera
+		cam.lookAt(currentModelPosition.x, currentModelPosition.y, currentModelPosition.z);
+		
 		cam.update();
 		cam.apply(gl);
 		floor.renderWireframe(gl);
@@ -127,7 +134,7 @@ public class ModelViewer extends DemoWrapper {
 	}
 
 	public void turnRight() {
-		mesh.rotateX(Gdx.gl10, 25);
+		mesh.rotateX(gl, 25);
 	}
 
 	@Override
@@ -191,9 +198,10 @@ public class ModelViewer extends DemoWrapper {
 	@Override
 	public void dispose()
 	{
-		//Everything that we change in the openglState needs to be reverted to it original state
-		//or some other tests might break
-		GL10 gl = Gdx.app.getGraphics().getGL10();
+		// Everything that we change in the
+		// OpenGL-state needs to be reverted
+		// to it's original state.
+		// Otherwise some other tests might break.
 		gl.glDisable(GL10.GL_DEPTH_TEST);
 	}
 

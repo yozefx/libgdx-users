@@ -18,7 +18,7 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	private static Vector3 campos;
 	private Vector3 dir;
 	private Vector2 fieldSize;
-	private Vector3 targetVec = new Vector3(0, 0, 0); // need a default value
+	private Vector3 targetVec = new Vector3(); // this equals (0,0,0)
 	private static float vpHeight;
 	private static final float CAM_NEAR_INITIAL = 0.1f;
 	private static final float CAM_FAR_INITIAL = 200f;
@@ -57,8 +57,8 @@ public class GuOrthoCam extends OrthographicCamera implements InputProcessor,
 	}
 
 	public void setTargetVec(float x, float y, float z) {
-		Log.out("set lookAt");
-		targetVec = new Vector3(x, y, z);
+		Log.out("set TargetVector to: " + x + "," + y + "," + z);
+		targetVec.set(x, y, z);
 	}
 
 	public void init() {

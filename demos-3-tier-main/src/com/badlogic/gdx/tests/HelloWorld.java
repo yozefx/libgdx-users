@@ -16,19 +16,18 @@
 package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.gdxuser.util.DemoWrapper;
 
 public class HelloWorld extends DemoWrapper implements ApplicationListener {
+	GL10 gl;
+
 	SpriteBatch spriteBatch;
 	Texture texture;
 	BitmapFont font;
@@ -36,6 +35,13 @@ public class HelloWorld extends DemoWrapper implements ApplicationListener {
 	Vector2 textDirection = new Vector2(1, 1);
 
 	@Override public void create () {
+		gl = Gdx.gl10;
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+//		gl.glEnable(GL10.GL_DEPTH_TEST);
+//		gl.glDisable(GL10.GL_TEXTURE_2D);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		gl.glClearColor(0,0,0,1);
+		
 		font = new BitmapFont();
 		font.setColor(Color.RED);
 		texture = new Texture(Gdx.files.internal("data/badlogic.jpg"));
@@ -46,7 +52,7 @@ public class HelloWorld extends DemoWrapper implements ApplicationListener {
 		int centerX = Gdx.graphics.getWidth() / 2;
 		int centerY = Gdx.graphics.getHeight() / 2;
 
-		Gdx.graphics.getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		// more fun but confusing :)
 		//textPosition.add(textDirection.tmp().mul(Gdx.graphics.getDeltaTime()).mul(60));
@@ -71,7 +77,7 @@ public class HelloWorld extends DemoWrapper implements ApplicationListener {
 		}
 
 		spriteBatch.begin();
-		spriteBatch.setColor(Color.WHITE);
+//		spriteBatch.setColor(Color.WHITE);
 		spriteBatch.draw(texture, 
 							  centerX - texture.getWidth() / 2, 
 							  centerY - texture.getHeight() / 2, 

@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.WindowedMean;
 import com.gdxuser.util.DemoWrapper;
 
 public class DecalTest extends DemoWrapper {
+	GL10 gl;
+
 	public static final int TARGET_FPS = 40;
 	public static final int INITIAL_RENDERED = 100;
 	private boolean willItBlend_that_is_the_question = true;
@@ -35,10 +37,10 @@ public class DecalTest extends DemoWrapper {
 
 	@Override
 	public void create() {
-		
-		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
-		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
-		Gdx.gl.glClearColor(1,1,0,1);
+		gl = Gdx.gl10;
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL10.GL_LESS);
+		gl.glClearColor(1,1,0,1);
 		
 		egg = new Texture(Gdx.files.internal("data/badges/128/badge0.png"));
 		egg.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -53,13 +55,11 @@ public class DecalTest extends DemoWrapper {
 			toRender.add(makeDecal());
 		}
 		batch = new DecalBatch(strategy);
-
-		
 	}
 
 	@Override
 	public void render() {
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		float elapsed = Gdx.graphics.getDeltaTime();
 		float scale = timePassed > 0.5 ? 1 - timePassed / 2 : 0.5f + timePassed / 2;
@@ -100,22 +100,20 @@ public class DecalTest extends DemoWrapper {
 
 	@Override
 	public void resize(int width, int height) {
-		w = Gdx.graphics.getWidth() / 0.8f;
-		h = Gdx.graphics.getHeight() / 0.8f;
 		cam = new OrthographicCamera(width, height);
 		cam.near = 0.1f;
 		cam.far = 10f;
 		cam.position.set(0, 0, 0.1f);
 		cam.direction.set(0, 0, -1f);
 		cam.update();
-		cam.apply(Gdx.gl10);
+		cam.apply(gl);
 	}
 	
 	@Override
 	public void dispose()
 	{
-		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
-		Gdx.gl.glClearColor(0,0,0,1);
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glClearColor(0,0,0,1);
 	}
 
 	private Decal makeDecal() {

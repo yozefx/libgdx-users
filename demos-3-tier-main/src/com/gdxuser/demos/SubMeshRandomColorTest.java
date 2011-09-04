@@ -20,8 +20,7 @@ public class SubMeshRandomColorTest extends DemoWrapper {
 	
 	@Override
 	public void create() {
-
-		gl = Gdx.app.getGraphics().getGL10();
+		gl = Gdx.gl10;
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
@@ -41,7 +40,7 @@ public class SubMeshRandomColorTest extends DemoWrapper {
 		// set colors for all building floor's submeshes
 		roomColors = new Color[building.getSubMeshes().length];
 		int i = 0;
-		for (SubMesh subMeshName : building.getSubMeshes()) {
+		for (SubMesh subMesh : building.getSubMeshes()) {
 			roomColors[i] = new Color();
 			roomColors[i].set((float) Math.random(), (float) Math.random(),
 					(float) Math.random(), 1f);
@@ -85,4 +84,15 @@ public class SubMeshRandomColorTest extends DemoWrapper {
 		}
 	}
 
+	@Override
+	public void dispose() {
+		// Clean up GL state...
+		
+		// Disable face culling.
+		gl.glDisable(GL10.GL_CULL_FACE);
+
+		// Disable Z-sorting, depth test
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+	}
+	
 }

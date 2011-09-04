@@ -20,7 +20,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.gdxuser.demos.DecalWall;
 import com.gdxuser.demos.ModelViewer;
@@ -28,7 +27,6 @@ import com.gdxuser.demos.QuadRenderTest;
 import com.gdxuser.demos.SubMeshColorTest;
 import com.gdxuser.demos.SubMeshRandomColorTest;
 import com.gdxuser.util.DemoWrapper;
-import com.gdxuser.util.Log;
 
 public class TestCollection implements ApplicationListener, InputProcessor {
 	private final DemoWrapper[] tests = {
@@ -42,7 +40,8 @@ public class TestCollection implements ApplicationListener, InputProcessor {
 			new DecalTest(),
 			new HelloWorld(),
 			new QuadRenderTest(),
-			new IsoCamTest()};
+			new IsoCamTest()
+			};
 	
 	private int testIndex = 0;
 
