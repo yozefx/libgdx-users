@@ -35,9 +35,11 @@ public class DecalTest extends DemoWrapper {
 
 	@Override
 	public void create() {
+		
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
-
+		Gdx.gl.glClearColor(1,1,0,1);
+		
 		egg = new Texture(Gdx.files.internal("data/badges/128/badge0.png"));
 		egg.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		egg.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
@@ -52,7 +54,7 @@ public class DecalTest extends DemoWrapper {
 		}
 		batch = new DecalBatch(strategy);
 
-		Gdx.gl.glClearColor(1,1,0,1);
+		
 	}
 
 	@Override
@@ -107,6 +109,13 @@ public class DecalTest extends DemoWrapper {
 		cam.direction.set(0, 0, -1f);
 		cam.update();
 		cam.apply(Gdx.gl10);
+	}
+	
+	@Override
+	public void dispose()
+	{
+		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+		Gdx.gl.glClearColor(0,0,0,1);
 	}
 
 	private Decal makeDecal() {

@@ -13,14 +13,14 @@ import com.gdxuser.util.DemoWrapper;
 /* @author: E.Spitz
  * @date: August, 19th 2011
  */
-public class QuadRenderTest extends DemoWrapper implements Screen {
+public class QuadRenderTest extends DemoWrapper {
 
 	OrthographicCamera camera;
 	Mesh quad;
 	Texture quadTexture;
 	
 	@Override
-	public void show() {
+	public void create() {
 
 		// Set up a camera that will contain our mesh in it's frustum
 		// Camera looks at [0,0] by default, so I'll place the mesh there
@@ -32,7 +32,7 @@ public class QuadRenderTest extends DemoWrapper implements Screen {
 				new VertexAttribute(Usage.Position, 3, "a_position"), 
 				new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoords"));
 		
-		// Set our verts up in a CCW order
+		// Set our verts up in a CCW (Counter Clock Wise) order
 		quad.setVertices(new float[] {
 				-5f, -5f, 0, 0, 1,	// bottom left
 				5f, -5f, 0, 1, 1,	// bottom right
@@ -40,7 +40,7 @@ public class QuadRenderTest extends DemoWrapper implements Screen {
 				-5f, 5f, 0, 0, 0});	// top left
 		
 		// Load up a texture to apply to our mesh...
-		quadTexture = new Texture(Gdx.files.internal("data/img/planet_earth.png"));
+		quadTexture = new Texture(Gdx.files.internal("data/badlogic.jpg"));
 		
 		// Since the camera will never move in this example, 
 		// I'll just update and apply the matrices right here
@@ -48,16 +48,16 @@ public class QuadRenderTest extends DemoWrapper implements Screen {
 		camera.update();
 		camera.apply(Gdx.gl10);
 		
+		// Enable texturing
+		Gdx.gl10.glEnable(GL10.GL_TEXTURE_2D);
+		
 	}
 	
 	@Override
-	public void render(float delta) {
+	public void render() {
 		GL10 gl = Gdx.gl10;
 		// Clear the color buffer
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		// Enable texturing
-		gl.glEnable(GL10.GL_TEXTURE_2D);
 			
 		// Bind our texture so it will be applied to the quad
 		quadTexture.bind();
@@ -100,12 +100,6 @@ public class QuadRenderTest extends DemoWrapper implements Screen {
 	}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
 		
@@ -124,9 +118,11 @@ public class QuadRenderTest extends DemoWrapper implements Screen {
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void dispose() 
+	{
+		//Everything that we change in the openglState needs to be reverted to it original state
+		//or some other tests might break
+		Gdx.gl10.glDisable(GL10.GL_TEXTURE_2D);
 	}
 	
 }

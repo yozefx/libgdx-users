@@ -44,6 +44,7 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	public void create() {
 		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 		Gdx.gl10.glDepthFunc(GL10.GL_LESS);
+		Gdx.gl10.glClearColor(0.5f, 0.5f, 0.5f, 1);
 
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
@@ -151,7 +152,6 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 	@Override
 	public void render() {
 		GL10 gl = Gdx.app.getGraphics().getGL10();
-		// gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		float delta = Gdx.graphics.getDeltaTime();
@@ -260,6 +260,15 @@ public class DecalWall extends DemoWrapper implements InputProcessor {
 			break;
 		}
 		return (super.keyDown(keyCode));
+	}
+	
+	@Override
+	public void dispose()
+	{
+		//Everything that we change in the openglState needs to be reverted to it original state
+		//or some other tests might break
+		Gdx.gl10.glDisable(GL10.GL_DEPTH_TEST);
+		Gdx.gl10.glClearColor(0, 0, 0, 1);
 	}
 
 }
